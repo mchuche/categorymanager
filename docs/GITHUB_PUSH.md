@@ -1,19 +1,31 @@
 # Pousser le dépôt sur GitHub
 
-## Si vous voyez « Permission denied » / compte incorrect (ex. `mchuche49` au lieu de `mchuche`)
+## Erreur : `Permission to mchuche/... denied to mchuche49`
 
-Les identifiants HTTPS précédents ont été invalidés sur cette machine (`git credential reject`). Au prochain `git push`, Git vous redemandera un mot de passe : utilisez un **Personal Access Token (classic)** du compte **`mchuche`**, pas le mot de passe du site.
+GitHub identifie le pousseur grâce au **jeton (PAT)**, pas seulement au nom d’utilisateur saisi. Si le message indique **`mchuche49`**, c’est que le **token a été généré sur le compte `mchuche49`** (ou un ancien token de ce compte est encore en cache). Tant que vous collez ce token, l’erreur restera.
 
-1. GitHub → **Settings → Developer settings → Personal access tokens → Tokens (classic)** → **Generate new token**, cochez au minimum **`repo`**.
-2. Dans le dépôt :
+**Correctif :**
+
+1. Ouvrez GitHub en étant connecté **en `mchuche`** (déconnectez-vous de `mchuche49` si besoin, ou fenêtre privée).
+2. Créez un **nouveau** Personal Access Token (classic) : **Settings → Developer settings → Personal access tokens → Generate new token**, cochez **`repo`**.
+3. Sur le serveur, videz le cache d’identifiants Git puis poussez à nouveau :
 
    ```bash
+   git credential-cache exit 2>/dev/null
+   printf "protocol=https\nhost=github.com\n" | git credential reject
    cd /chemin/vers/categorymanager
+   git remote set-url origin "https://mchuche@github.com/mchuche/categorymanager.git"
    git push -u origin main
    ```
 
-3. **Username** : `mchuche`  
-4. **Password** : collez le **token** (pas votre mot de passe GitHub).
+4. Quand Git demande le mot de passe : collez **uniquement** le **nouveau** token du compte **`mchuche`**.
+
+L’URL avec `mchuche@` devant `github.com` force l’utilisateur affiché côté Git ; le compte effectif sur GitHub reste celui lié au **PAT**.
+
+## Première configuration HTTPS (URL recommandée)
+
+1. Même procédure de token, compte **`mchuche`**.
+2. `git push` : **username** `mchuche`, **password** = le **token** (jamais le mot de passe du site).
 
 ## Alternative : SSH
 
