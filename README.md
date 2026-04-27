@@ -78,6 +78,7 @@ Le build Vite écrit directement dans `plugins/categorymanager/public/` (voir [`
 | [`docs/STACK_ET_PROFESSIONNALISATION.md`](docs/STACK_ET_PROFESSIONNALISATION.md) | Stack technique, pistes de qualité (lint, tests, CI) |
 | [`docs/PRD  CategorieManager - Visualiseur.md`](<docs/PRD  CategorieManager - Visualiseur.md>) | Exigences fonctionnelles (PRD) |
 | [`docs/images/`](docs/images/) | Captures d’écran pour la documentation (Sunburst Structure / Tickets) |
+| [`docs/GITHUB_PUSH.md`](docs/GITHUB_PUSH.md) | Pousser le dépôt sur GitHub (HTTPS / PAT, SSH, erreur de permission) |
 
 ## Arborescence utile (aperçu)
 
