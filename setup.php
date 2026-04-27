@@ -71,7 +71,7 @@ function plugin_version_categorymanager(): array
 function plugin_categorymanager_check_prerequisites(): bool
 {
     if (version_compare(GLPI_VERSION, '11.0', '<')) {
-        echo 'Ce plugin nécessite GLPI >= 11.0.';
+        echo __('This plugin requires GLPI >= 11.0.', 'categorymanager');
         return false;
     }
     return true;

@@ -30,7 +30,7 @@ class PluginCategorymanagerVisualizer extends CommonGLPI
      */
     public static function getTypeName($nb = 0)
     {
-        return _n('Visualiseur catégories', 'Visualiseur catégories', $nb, 'categorymanager');
+        return _n('Category visualizer', 'Category visualizers', $nb, 'categorymanager');
     }
 
     /**

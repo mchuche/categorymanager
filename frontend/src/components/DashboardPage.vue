@@ -2,7 +2,7 @@
   <div class="dashboard-container">
     <!-- En-tête : thème + plein écran (session = session GLPI de la page, pas de déconnexion locale) -->
     <header class="dashboard-header">
-      <h1>CategorieManager - Visualisation GLPI</h1>
+      <h1>{{ t('dashboard_title') }}</h1>
       <div class="dashboard-header-actions">
         <ThemeToggle />
         <!--
@@ -14,13 +14,13 @@
           type="button"
           class="theme-toolbar-btn"
           :aria-pressed="isSunburstFullscreen"
-          :aria-label="isSunburstFullscreen ? 'Quitter le plein écran' : 'Afficher le graphique en plein écran'"
-          :title="isSunburstFullscreen ? 'Quitter le plein écran (Échap)' : 'Afficher le graphique en plein écran'"
+          :aria-label="isSunburstFullscreen ? t('fullscreen_exit') : t('fullscreen_enter')"
+          :title="isSunburstFullscreen ? t('fullscreen_exit_esc') : t('fullscreen_enter')"
           @click="toggleSunburstFullscreen"
         >
           <ToolbarIcon :name="isSunburstFullscreen ? 'minimize' : 'maximize'" />
           <span class="sr-only">{{
-            isSunburstFullscreen ? 'Quitter le plein écran' : 'Plein écran'
+            isSunburstFullscreen ? t('fullscreen_exit') : t('fullscreen_sr')
           }}</span>
         </button>
       </div>
@@ -29,21 +29,21 @@
     <!-- Zone de chargement initial (plein écran) : étapes détaillées dans loadingVerbose -->
     <div v-if="isLoading" class="loading-container">
       <div class="spinner"></div>
-      <p class="loading-title">Chargement des catégories</p>
+      <p class="loading-title">{{ t('loading_categories') }}</p>
       <p class="loading-detail">{{ loadingVerbose }}</p>
     </div>
 
     <!-- Message d'erreur -->
     <div v-else-if="errorMessage" class="error-container">
       <p class="error-text">{{ errorMessage }}</p>
-      <button @click="loadData" class="retry-button">Réessayer</button>
+      <button @click="loadData" class="retry-button">{{ t('retry') }}</button>
     </div>
 
     <!-- Contenu principal : catégories ITIL (pleine largeur) -->
     <div v-else class="content-container">
       <div class="categories-container">
         <div class="categories-card">
-          <h2>Catégories ITIL</h2>
+          <h2>{{ t('categories_heading') }}</h2>
 
           <!--
             Données en cache (localStorage) : date de dernière synchro + bouton actualiser.
@@ -55,11 +55,11 @@
             :class="{ 'cache-info-banner--stale': cacheIsStale && !isRefreshing }"
           >
             <span class="cache-info-banner__text">
-              <template v-if="isRefreshing">Actualisation des données depuis GLPI…</template>
+              <template v-if="isRefreshing">{{ t('cache_refreshing') }}</template>
               <template v-else>
-                Affichage des données du <strong>{{ cacheDisplayLabel }}</strong>
-                <span v-if="dataFromCache" class="cache-info-banner__hint"> (depuis le cache local)</span>
-                <span v-if="cacheIsStale" class="cache-info-banner__stale-hint"> — mise à jour recommandée</span>
+                {{ tf('cache_showing_from', cacheDisplayLabel) }}
+                <span v-if="dataFromCache" class="cache-info-banner__hint">{{ t('cache_local_hint') }}</span>
+                <span v-if="cacheIsStale" class="cache-info-banner__stale-hint">{{ t('cache_stale_hint') }}</span>
               </template>
             </span>
             <button
@@ -68,7 +68,7 @@
               :disabled="isRefreshing"
               @click="refreshCategoriesFromServer"
             >
-              Actualiser
+              {{ t('refresh') }}
             </button>
             <span v-if="refreshError" class="cache-info-banner__err" role="alert">{{ refreshError }}</span>
           </div>
@@ -76,7 +76,7 @@
           <!-- Message de chargement des catégories -->
           <div v-if="isLoadingCategories" class="loading-categories">
             <div class="spinner-small"></div>
-            <p class="loading-title">Chargement des catégories</p>
+            <p class="loading-title">{{ t('loading_categories') }}</p>
             <p class="loading-detail">{{ loadingVerbose }}</p>
           </div>
           
@@ -84,7 +84,7 @@
           <div v-else-if="categoriesError" class="error-categories">
             <p class="error-text">{{ categoriesError }}</p>
             <button type="button" class="retry-button" @click="loadCategories({ silent: false })">
-              Réessayer
+              {{ t('retry') }}
             </button>
           </div>
           
@@ -92,46 +92,46 @@
           <div v-else-if="categories && categories.length > 0" class="categories-list">
             <!-- Une seule barre : compteur + onglets (gain de hauteur) -->
             <div class="categories-toolbar">
-              <span class="categories-count" title="Nombre de catégories chargées depuis GLPI">
-                <strong>{{ categories.length }}</strong> catégorie(s)
+              <span class="categories-count" :title="t('categories_count_title')">
+                <strong>{{ categories.length }}</strong> {{ t('categories_loaded_count') }}
               </span>
-              <nav class="view-tabs" aria-label="Type de vue">
+              <nav class="view-tabs" :aria-label="t('view_mode_label')">
                 <button
                   @click="viewMode = 'sunburst'"
                   :class="['tab-button', { active: viewMode === 'sunburst' }]"
                   type="button"
                 >
-                  Sunburst
+                  {{ t('tab_sunburst') }}
                 </button>
                 <button
                   @click="viewMode = 'table'"
                   :class="['tab-button', { active: viewMode === 'table' }]"
                   type="button"
                 >
-                  Tableau
+                  {{ t('tab_table') }}
                 </button>
                 <button
                   @click="viewMode = 'tree'"
                   :class="['tab-button', { active: viewMode === 'tree' }]"
                   type="button"
                 >
-                  Arbre
+                  {{ t('tab_tree') }}
                 </button>
                 <button
                   @click="viewMode = 'heatmap'"
                   :class="['tab-button', { active: viewMode === 'heatmap' }]"
                   type="button"
-                  title="Carte de chaleur : volume par branche sur 12 mois glissants"
+                  :title="t('tab_heatmap12_title')"
                 >
-                  12 mois
+                  {{ t('tab_heatmap12') }}
                 </button>
                 <button
                   @click="viewMode = 'heatmapGroups'"
                   :class="['tab-button', { active: viewMode === 'heatmapGroups' }]"
                   type="button"
-                  title="Tickets résolus ou clos par groupe assigné sur 12 mois glissants"
+                  :title="t('tab_groups_title')"
                 >
-                  Groupes
+                  {{ t('tab_groups') }}
                 </button>
               </nav>
             </div>
@@ -141,7 +141,7 @@
               <input
                 v-model="searchQuery"
                 type="text"
-                placeholder="Rechercher une catégorie..."
+                :placeholder="t('search_placeholder')"
                 class="search-input"
               />
             </div>
@@ -152,37 +152,37 @@
                 <div
                   class="sunburst-mode-toggle"
                   role="group"
-                  aria-label="Mode d'affichage du sunburst"
+                  :aria-label="t('sunburst_display_aria')"
                 >
-                  <span class="sunburst-mode-label">Affichage</span>
+                  <span class="sunburst-mode-label">{{ t('display_mode') }}</span>
                   <button
                     type="button"
                     :class="['sunburst-mode-btn', { 'sunburst-mode-btn--active': !sunburstWeightByTickets }]"
                     @click="sunburstWeightByTickets = false"
                   >
-                    Structure
+                    {{ t('mode_structure') }}
                   </button>
                   <button
                     type="button"
                     :class="['sunburst-mode-btn', { 'sunburst-mode-btn--active': sunburstWeightByTickets }]"
                     @click="sunburstWeightByTickets = true"
                   >
-                    Tickets
+                    {{ t('mode_tickets') }}
                   </button>
                 </div>
                 <p
                   v-if="sunburstWeightByTickets"
                   class="sunburst-hint-inline"
-                  title="Secteurs proportionnels au nombre de tickets par branche (total incluant les sous-catégories)."
+                  :title="t('hint_proportional_tickets_title')"
                 >
-                  Proportionnel aux tickets par branche.
+                  {{ t('hint_proportional_tickets') }}
                 </p>
                 <p
                   v-else
                   class="sunburst-hint-inline"
-                  title="Secteurs selon la hiérarchie uniquement (angles liés aux feuilles), sans pondération par volume de tickets."
+                  :title="t('hint_structure_angles_title')"
                 >
-                  Vue structure (angles hiérarchiques).
+                  {{ t('hint_structure_angles') }}
                 </p>
               </div>
               <!--
@@ -191,16 +191,16 @@
               -->
               <div v-if="sunburstWeightByTickets" class="sunburst-period-row">
                 <div class="sunburst-period-head">
-                  <span id="sunburst-period-label" class="sunburst-period-label">Période (Sunburst uniquement)</span>
+                  <span id="sunburst-period-label" class="sunburst-period-label">{{ t('period_heading') }}</span>
                   <button
                     v-if="sunburstPeriodIsFiltered"
                     type="button"
                     class="sunburst-period-refresh-btn"
                     :disabled="sunburstPeriodLoading || isLoadingCategories || isRefreshing"
-                    title="Relancer toutes les requêtes de comptage vers GLPI pour cette période"
+                    :title="t('refresh_counts_title')"
                     @click="refreshSunburstPeriodCountsFromServer"
                   >
-                    Rafraîchir les compteurs
+                    {{ t('refresh_counts') }}
                   </button>
                 </div>
                 <div
@@ -209,7 +209,7 @@
                   :aria-labelledby="'sunburst-period-label'"
                 >
                   <button
-                    v-for="(step, i) in SUNBURST_PERIOD_STEPS"
+                    v-for="(step, i) in sunburstPeriodSteps"
                     :key="step.id"
                     type="button"
                     class="sunburst-period-chip"
@@ -222,19 +222,13 @@
                   </button>
                 </div>
                 <p class="sunburst-period-current" aria-live="polite">
-                  <strong>{{ SUNBURST_PERIOD_STEPS[sunburstPeriodIndex]?.shortLabel ?? '—' }}</strong>
+                  <strong>{{ sunburstPeriodSteps[sunburstPeriodIndex]?.shortLabel ?? '—' }}</strong>
                   <span class="sunburst-period-current-hint">
-                    — {{ SUNBURST_PERIOD_STEPS[sunburstPeriodIndex]?.hint }}
+                    — {{ sunburstPeriodSteps[sunburstPeriodIndex]?.hint }}
                   </span>
                 </p>
                 <p v-if="sunburstPeriodError" class="sunburst-period-err" role="alert">{{ sunburstPeriodError }}</p>
-                <p class="sunburst-period-note">
-                  Indépendant du <strong>tableau</strong> et de l’<strong>arbre</strong> (toujours historique complet).
-                  Les compteurs par période sont mis en cache <strong>sans expiration automatique</strong> ; un nouvel appel
-                  GLPI n’a lieu que s’il n’y a pas encore de données locales pour cette période, ou si vous cliquez sur
-                  <strong>Rafraîchir les compteurs</strong>.
-                  Filtre sur la <strong>date d’ouverture</strong> (GLPI peut utiliser <code>date_creation</code> en secours).
-                </p>
+                <p class="sunburst-period-note">{{ t('sunburst_period_note') }}</p>
               </div>
               <div ref="sunburstShellRef" class="sunburst-shell sunburst-shell--chart">
                 <div
@@ -243,7 +237,7 @@
                   aria-busy="true"
                 >
                   <div class="spinner-small"></div>
-                  <span>Comptage pour la période…</span>
+                  <span>{{ t('counting_period') }}</span>
                 </div>
                 <SunburstChart
                   :key="`sunburst-${sunburstWeightByTickets ? 'tickets' : 'structure'}-${sunburstPeriodIndex}`"
@@ -267,7 +261,7 @@
                         class="th-sort-btn"
                         @click="toggleTableSort('id')"
                       >
-                        ID
+                        {{ t('col_id') }}
                         <span class="th-sort-icon" aria-hidden="true">{{ sortIconFor('id') }}</span>
                       </button>
                     </th>
@@ -280,7 +274,7 @@
                         class="th-sort-btn"
                         @click="toggleTableSort('name')"
                       >
-                        Nom
+                        {{ t('col_name') }}
                         <span class="th-sort-icon" aria-hidden="true">{{ sortIconFor('name') }}</span>
                       </button>
                     </th>
@@ -293,7 +287,7 @@
                         class="th-sort-btn"
                         @click="toggleTableSort('parent')"
                       >
-                        Catégorie parente
+                        {{ t('col_parent') }}
                         <span class="th-sort-icon" aria-hidden="true">{{ sortIconFor('parent') }}</span>
                       </button>
                     </th>
@@ -306,7 +300,7 @@
                         class="th-sort-btn"
                         @click="toggleTableSort('level')"
                       >
-                        Niveau
+                        {{ t('col_level') }}
                         <span class="th-sort-icon" aria-hidden="true">{{ sortIconFor('level') }}</span>
                       </button>
                     </th>
@@ -317,10 +311,10 @@
                       <button
                         type="button"
                         class="th-sort-btn"
-                        :title="'Tickets ouverts sur cette catégorie uniquement (sans les sous-catégories)'"
+                        :title="t('col_tickets_direct_hint')"
                         @click="toggleTableSort('tickets')"
                       >
-                        Tickets (direct)
+                        {{ t('col_tickets_direct') }}
                         <span class="th-sort-icon" aria-hidden="true">{{ sortIconFor('tickets') }}</span>
                       </button>
                     </th>
@@ -331,10 +325,10 @@
                       <button
                         type="button"
                         class="th-sort-btn"
-                        :title="'Somme : tickets directs + tickets comptés sur toutes les sous-catégories (même logique que le Sunburst « Tickets »)'"
+                        :title="t('col_branch_hint')"
                         @click="toggleTableSort('branch')"
                       >
-                        Total branche
+                        {{ t('col_branch_total') }}
                         <span class="th-sort-icon" aria-hidden="true">{{ sortIconFor('branch') }}</span>
                       </button>
                     </th>
@@ -347,7 +341,7 @@
                     class="category-row"
                   >
                     <td>{{ category.id }}</td>
-                    <td class="category-name">{{ category.name || 'Sans nom' }}</td>
+                    <td class="category-name">{{ category.name || t('unsorted_name') }}</td>
                     <td class="parent-cell">{{ parentDisplayLabel(category) }}</td>
                     <td>{{ category.level || '-' }}</td>
                     <td class="ticket-count">{{ category.ticketCount !== undefined ? category.ticketCount : '-' }}</td>
@@ -371,36 +365,30 @@
 
             <!-- Carte de chaleur temporelle (12 mois glissants, agrégation par racines métier) -->
             <div v-else-if="viewMode === 'heatmap'" class="categories-heatmap-container">
-              <p class="heatmap-intro">
-                Volume de tickets par <strong>branche</strong> (catégorie + sous-arbres) sur les
-                <strong>12 derniers mois</strong> (fenêtre glissante jusqu’à aujourd’hui). Utilisez
-                <strong>▶ / ▼</strong> pour afficher les sous-catégories sous chaque racine métier. La date utilisée
-                est celle d’<strong>ouverture</strong> du ticket (champ détecté dans GLPI :
-                <code>date</code> ou <code>date_creation</code>).
-              </p>
+              <p class="heatmap-intro">{{ t('heatmap_intro') }}</p>
               <div
                 v-if="heatmapMatrix && !heatmapLoading"
                 class="heatmap-cache-bar"
               >
                 <span v-if="heatmapCacheDisplayLabel" class="heatmap-cache-bar__text">
-                  Données du <strong>{{ heatmapCacheDisplayLabel }}</strong>
-                  <span v-if="heatmapFromDiskCache" class="heatmap-cache-bar__hint"> (cache local 12 mois)</span>
+                  {{ tf('heatmap_data_from', heatmapCacheDisplayLabel) }}
+                  <span v-if="heatmapFromDiskCache" class="heatmap-cache-bar__hint">{{ t('heatmap_cache_hint') }}</span>
                 </span>
                 <button
                   type="button"
                   class="heatmap-cache-bar__btn"
                   :disabled="heatmapLoading"
-                  title="Recharger toutes les requêtes (12 mois × catégories)"
+                  :title="t('heatmap_refresh_12_title')"
                   @click="refreshHeatmapFromServer"
                 >
-                  Rafraîchir les 12 mois
+                  {{ t('heatmap_refresh_12') }}
                 </button>
               </div>
               <div
                 v-if="heatmapMatrix && !heatmapLoading"
                 class="heatmap-sort-bar"
               >
-                <label class="heatmap-sort-bar__label" for="heatmap-sort-categories">Trier les lignes</label>
+                <label class="heatmap-sort-bar__label" for="heatmap-sort-categories">{{ t('sort_rows') }}</label>
                 <select
                   id="heatmap-sort-categories"
                   v-model="heatmapSortMode"
@@ -408,17 +396,14 @@
                   aria-describedby="heatmap-sort-hint-cat"
                 >
                   <option
-                    v-for="opt in HEATMAP_SORT_OPTIONS_CATEGORIES"
+                    v-for="opt in heatmapSortOptionsCategories"
                     :key="opt.value"
                     :value="opt.value"
                   >
                     {{ opt.label }}
                   </option>
                 </select>
-                <span id="heatmap-sort-hint-cat" class="heatmap-sort-bar__hint">
-                  Ordre des <strong>racines métier</strong> selon le tri ; sous chaque racine dépliée, ordre
-                  d’arbre GLPI. Affichage seul (ne modifie pas GLPI).
-                </span>
+                <span id="heatmap-sort-hint-cat" class="heatmap-sort-bar__hint">{{ t('heatmap_sort_hint_cat') }}</span>
               </div>
               <div v-if="heatmapLoading" class="heatmap-loading">
                 <div class="spinner-small"></div>
@@ -450,17 +435,17 @@
                 >
                   <aside
                     class="heatmap-tree-labels heatmap-tree-labels--paired"
-                    aria-label="Arbre des catégories et volumes par branche"
+                    :aria-label="t('heatmap_tree_aria')"
                   >
                     <div class="heatmap-tree-labels-toolbar">
                       <button
                         type="button"
                         class="heatmap-tree-collapse-all"
                         :disabled="heatmapExpandedIds.size === 0"
-                        title="Masquer toutes les sous-catégories"
+                        :title="t('collapse_all_title')"
                         @click="collapseAllHeatmapExpand"
                       >
-                        Replier tout
+                        {{ t('collapse_all') }}
                       </button>
                     </div>
                     <ul class="heatmap-tree-labels-list" role="list">
@@ -482,7 +467,9 @@
                           class="heatmap-tree-toggle"
                           :aria-expanded="heatmapExpandedIds.has(row.id)"
                           :aria-label="
-                            (heatmapExpandedIds.has(row.id) ? 'Replier' : 'Déplier') + ' la branche ' + row.name
+                            heatmapExpandedIds.has(row.id)
+                              ? tf('collapse_branch', row.name)
+                              : tf('expand_branch', row.name)
                           "
                           @click="toggleHeatmapExpand(row.id)"
                         >
@@ -521,35 +508,30 @@
 
             <!-- Carte de chaleur : tickets résolus/fermés par groupe assigné (12 mois) -->
             <div v-else-if="viewMode === 'heatmapGroups'" class="categories-heatmap-container">
-              <p class="heatmap-intro">
-                Nombre de tickets <strong>résolus</strong> ou <strong>clos</strong> (statuts GLPI 5 et 6) par
-                <strong>groupe assigné</strong>, sur les <strong>12 derniers mois</strong> (fenêtre glissante). La date
-                retenue est la <strong>date de résolution</strong> (<code>solvedate</code>). Seuls les groupes ayant au
-                moins un ticket sur la période apparaissent.
-              </p>
+              <p class="heatmap-intro">{{ t('heatmap_intro_groups') }}</p>
               <div
                 v-if="heatmapGroupsMatrix !== null && !heatmapGroupsLoading"
                 class="heatmap-cache-bar"
               >
                 <span v-if="heatmapGroupsCacheDisplayLabel" class="heatmap-cache-bar__text">
-                  Données du <strong>{{ heatmapGroupsCacheDisplayLabel }}</strong>
-                  <span v-if="heatmapGroupsFromDiskCache" class="heatmap-cache-bar__hint"> (cache local groupes)</span>
+                  {{ tf('heatmap_data_from', heatmapGroupsCacheDisplayLabel) }}
+                  <span v-if="heatmapGroupsFromDiskCache" class="heatmap-cache-bar__hint">{{ t('heatmap_groups_cache_hint') }}</span>
                 </span>
                 <button
                   type="button"
                   class="heatmap-cache-bar__btn"
                   :disabled="heatmapGroupsLoading"
-                  title="Recharger la liste des groupes et tous les comptages (12 mois × groupes)"
+                  :title="t('heatmap_refresh_groups_title')"
                   @click="refreshHeatmapGroupsFromServer"
                 >
-                  Rafraîchir groupes
+                  {{ t('heatmap_refresh_groups') }}
                 </button>
               </div>
               <div
                 v-if="heatmapGroupsMatrix !== null && !heatmapGroupsLoading && heatmapGroupsMatrix.rowLabels.length > 0"
                 class="heatmap-sort-bar"
               >
-                <label class="heatmap-sort-bar__label" for="heatmap-sort-groups">Trier les lignes</label>
+                <label class="heatmap-sort-bar__label" for="heatmap-sort-groups">{{ t('sort_rows') }}</label>
                 <select
                   id="heatmap-sort-groups"
                   v-model="heatmapGroupsSortMode"
@@ -557,16 +539,14 @@
                   aria-describedby="heatmap-sort-hint-grp"
                 >
                   <option
-                    v-for="opt in HEATMAP_SORT_OPTIONS_GROUPS"
+                    v-for="opt in heatmapSortOptionsGroups"
                     :key="opt.value"
                     :value="opt.value"
                   >
                     {{ opt.label }}
                   </option>
                 </select>
-                <span id="heatmap-sort-hint-grp" class="heatmap-sort-bar__hint">
-                  Affichage seul ; l’ordre par défaut suit le chargement API (souvent A→Z).
-                </span>
+                <span id="heatmap-sort-hint-grp" class="heatmap-sort-bar__hint">{{ t('heatmap_sort_hint_grp') }}</span>
               </div>
               <div v-if="heatmapGroupsLoading" class="heatmap-loading">
                 <div class="spinner-small"></div>
@@ -577,8 +557,7 @@
                 v-else-if="heatmapGroupsMatrix && heatmapGroupsMatrix.rowLabels.length === 0"
                 class="heatmap-empty-msg"
               >
-                Aucun ticket résolu ou clos par groupe assigné sur cette fenêtre de 12 mois (vérifiez les droits API ou
-                élargissez la période en rechargeant plus tard).
+                {{ t('heatmap_empty_groups') }}
               </p>
               <TemporalHeatmapChart
                 v-else-if="heatmapGroupsMatrix && heatmapGroupsMatrix.rowLabels.length > 0"
@@ -586,22 +565,22 @@
                 :selected-month-index="heatmapGroupsMonthIndex"
                 :legend-hint="heatmapGroupsLegendHint"
                 slider-input-id="heatmap-groups-month-slider"
-                heatmap-aria-label="Carte de chaleur des tickets résolus ou clos par groupe et par mois"
+                :heatmap-aria-label="t('heatmap_chart_aria_groups')"
                 @update:selected-month-index="heatmapGroupsMonthIndex = $event"
               />
             </div>
             
             <!-- Section debug : données brutes -->
             <details class="debug-section">
-              <summary>Données brutes des catégories (debug)</summary>
+              <summary>{{ t('debug_raw_title') }}</summary>
               <pre>{{ JSON.stringify(categories.slice(0, 5), null, 2) }}</pre>
-              <p class="debug-note">Affichage des 5 premières catégories uniquement</p>
+              <p class="debug-note">{{ t('debug_note') }}</p>
             </details>
           </div>
           
           <!-- Message si aucune catégorie -->
           <div v-else class="no-categories">
-            <p>Aucune catégorie trouvée</p>
+            <p>{{ t('no_categories_found') }}</p>
           </div>
         </div>
       </div>
@@ -643,7 +622,7 @@ import {
   clearHeatmap12GroupsCache,
   heatmapGroupIdsKey
 } from '../services/heatmap12GroupsCache'
-import { SUNBURST_PERIOD_STEPS, sunburstPeriodIdFromIndex } from '../services/sunburstPeriodPresets'
+import { SUNBURST_PERIOD_IDS, sunburstPeriodIdFromIndex } from '../services/sunburstPeriodPresets'
 import {
   readSunburstPeriodIndex,
   writeSunburstPeriodIndex,
@@ -665,9 +644,10 @@ import TemporalHeatmapChart from './TemporalHeatmapChart.vue'
 import {
   sortHeatmapMatrix,
   HEATMAP_SORT,
-  HEATMAP_SORT_OPTIONS_CATEGORIES,
-  HEATMAP_SORT_OPTIONS_GROUPS
+  getHeatmapSortOptionsCategories,
+  getHeatmapSortOptionsGroups
 } from '../services/heatmapSort'
+import { cmT as t, cmTf as tf } from '../i18n'
 
 // État du composant
 const isLoading = ref(false)
@@ -677,7 +657,24 @@ const errorMessage = ref('')
  * Libellé d’étape affiché pendant le chargement (plein écran ou carte « Réessayer ») :
  * API, hiérarchie, compteurs tickets avec progression.
  */
-const loadingVerbose = ref('Initialisation…')
+const loadingVerbose = ref(t('loading_init'))
+
+/** Locale BCP47 (window.__CM_LOCALE__ « fr_FR » → « fr-FR ») pour dates / tri. */
+const glLocale = computed(() => {
+  const l = typeof window !== 'undefined' && window.__CM_LOCALE__ ? String(window.__CM_LOCALE__) : 'en_GB'
+  return l.replace(/_/g, '-')
+})
+
+const sunburstPeriodSteps = computed(() =>
+  SUNBURST_PERIOD_IDS.map((id) => ({
+    id,
+    shortLabel: t(`period_${id}_short`),
+    hint: t(`period_${id}_hint`)
+  }))
+)
+
+const heatmapSortOptionsCategories = computed(() => getHeatmapSortOptionsCategories(t))
+const heatmapSortOptionsGroups = computed(() => getHeatmapSortOptionsGroups(t))
 
 // État pour les catégories ITIL
 const categories = ref([])
@@ -752,7 +749,8 @@ const heatmapMatrixDisplay = computed(() => {
     const sortedRootsOnly = sortHeatmapMatrix(
       rootsOnlyBase,
       heatmapSortMode.value,
-      heatmapMonthIndex.value
+      heatmapMonthIndex.value,
+      glLocale.value
     )
     const rootOrder = sortedRootsOnly?.rootIds?.length ? sortedRootsOnly.rootIds : null
 
@@ -772,7 +770,7 @@ const heatmapMatrixDisplay = computed(() => {
     values: raw.values,
     rootIds: raw.rootIds
   }
-  return sortHeatmapMatrix(base, heatmapSortMode.value, heatmapMonthIndex.value)
+  return sortHeatmapMatrix(base, heatmapSortMode.value, heatmapMonthIndex.value, glLocale.value)
 })
 
 /** Hauteur d’une ligne de libellé (alignée sur la grille D3 via heatmapCellHeight). */
@@ -810,7 +808,8 @@ const heatmapGroupsMatrixDisplay = computed(() =>
   sortHeatmapMatrix(
     heatmapGroupsMatrix.value,
     heatmapGroupsSortMode.value,
-    heatmapGroupsMonthIndex.value
+    heatmapGroupsMonthIndex.value,
+    glLocale.value
   )
 )
 
@@ -825,13 +824,12 @@ const heatmapGroupsCacheSavedAt = ref(null)
 const heatmapGroupsFromDiskCache = ref(false)
 
 /** Texte d’aide sous le graphique D3 (métrique + champs GLPI). */
-const heatmapGroupsLegendHint =
-  'Intensité = nombre de tickets résolus (5) ou clos (6) pour le mois, selon la date de résolution (solvedate) et le groupe assigné au ticket.'
+const heatmapGroupsLegendHint = computed(() => t('heatmap_legend_groups'))
 
 const heatmapGroupsCacheDisplayLabel = computed(() => {
   if (!heatmapGroupsCacheSavedAt.value) return ''
   try {
-    return new Date(heatmapGroupsCacheSavedAt.value).toLocaleString('fr-FR', {
+    return new Date(heatmapGroupsCacheSavedAt.value).toLocaleString(glLocale.value, {
       dateStyle: 'short',
       timeStyle: 'short'
     })
@@ -843,7 +841,7 @@ const heatmapGroupsCacheDisplayLabel = computed(() => {
 const heatmapCacheDisplayLabel = computed(() => {
   if (!heatmapCacheSavedAt.value) return ''
   try {
-    return new Date(heatmapCacheSavedAt.value).toLocaleString('fr-FR', {
+    return new Date(heatmapCacheSavedAt.value).toLocaleString(glLocale.value, {
       dateStyle: 'short',
       timeStyle: 'short'
     })
@@ -862,7 +860,7 @@ const refreshError = ref('')
 const cacheDisplayLabel = computed(() => {
   if (!cacheSnapshotSavedAt.value) return ''
   try {
-    return new Date(cacheSnapshotSavedAt.value).toLocaleString('fr-FR', {
+    return new Date(cacheSnapshotSavedAt.value).toLocaleString(glLocale.value, {
       dateStyle: 'short',
       timeStyle: 'short'
     })
@@ -995,13 +993,13 @@ async function loadData() {
   }
 
   isLoading.value = true
-  loadingVerbose.value = 'Préparation du chargement (session GLPI, puis liste des catégories)…'
+  loadingVerbose.value = t('loading_prep')
 
   try {
     await loadCategories({ silent: false })
   } catch (error) {
     console.error('Erreur lors du chargement des données:', error)
-    errorMessage.value = 'Erreur lors du chargement des données: ' + (error.message || 'Erreur inconnue')
+    errorMessage.value = tf('error_load_data', error.message || t('error_unknown'))
   } finally {
     isLoading.value = false
     if (!categoriesError.value) {
@@ -1080,7 +1078,7 @@ async function fetchSunburstPeriodCounts(opts = {}) {
   } catch (e) {
     if (gen !== sunburstFetchGen) return
     console.error('[Dashboard] Sunburst — comptage par période', e)
-    sunburstPeriodError.value = e.message || 'Comptage impossible pour cette période.'
+    sunburstPeriodError.value = e.message || t('sunburst_count_failed')
     sunburstFilteredCounts.value = null
     sunburstFilteredCountsForPeriodId.value = null
   } finally {
@@ -1094,7 +1092,7 @@ async function fetchSunburstPeriodCounts(opts = {}) {
  * Clic sur un palier de période : mémorise la préférence et charge le cache ou l’API.
  */
 function selectSunburstPeriod(index) {
-  if (index < 0 || index >= SUNBURST_PERIOD_STEPS.length) return
+  if (index < 0 || index >= SUNBURST_PERIOD_IDS.length) return
   sunburstPeriodIndex.value = index
   const authStore = useAuthStore()
   writeSunburstPeriodIndex(authStore.getApiUrl(), index)
@@ -1127,8 +1125,7 @@ async function loadCategories(opts = {}) {
     isLoadingCategories.value = true
     categoriesError.value = ''
     categories.value = []
-    loadingVerbose.value =
-      'Étape 1/3 — Connexion à l’API GLPI et récupération de la liste des catégories ITIL (ITILCategory)…'
+    loadingVerbose.value = t('loading_step1')
   } else {
     isRefreshing.value = true
     refreshError.value = ''
@@ -1142,23 +1139,22 @@ async function loadCategories(opts = {}) {
       categoriesData.slice(0, 8).map((c) => c.id)
     )
 
-    loadingVerbose.value = `Étape 2/3 — ${categoriesData.length} catégorie(s) reçue(s). Préparation des compteurs de tickets…`
+    loadingVerbose.value = tf('loading_step2', String(categoriesData.length))
 
     const categoryIds = categoriesData.map((cat) => cat.id)
     const n = categoryIds.length
 
-    loadingVerbose.value = `Étape 3/3 — Comptage des tickets (historique complet pour tableau / arbre) : préparation des requêtes search/Ticket (0 / ${n})…`
+    loadingVerbose.value = tf('loading_step3_prep', String(n))
     console.log(`[Dashboard] Lancement du comptage de tickets pour ${n} catégorie(s) (sans filtre date)…`)
 
     const ticketCounts = await glpiApi.getTicketCountsForCategories(categoryIds, {
       concurrency: 8,
       onProgress(done, total) {
-        loadingVerbose.value = `Étape 3/3 — Comptage des tickets : ${done} / ${total} catégorie(s) traitée(s) (requêtes par lots vers GLPI)…`
+        loadingVerbose.value = tf('loading_step3_progress', String(done), String(total))
       }
     })
 
-    loadingVerbose.value =
-      'Finalisation — totaux par branche (sous-catégories incluses) et niveaux hiérarchiques…'
+    loadingVerbose.value = t('loading_finalize')
 
     const withDirect = categoriesData.map((cat) => ({
       ...cat,
@@ -1203,11 +1199,10 @@ async function loadCategories(opts = {}) {
   } catch (error) {
     console.error('Erreur lors de la récupération des catégories:', error)
     if (silent) {
-      refreshError.value = 'Actualisation impossible : ' + formatApiError(error)
+      refreshError.value = tf('error_refresh_failed', formatApiError(error))
     } else {
-      categoriesError.value =
-        'Erreur lors de la récupération des catégories: ' + formatApiError(error)
-      loadingVerbose.value = 'Échec du chargement — voir le message d’erreur ci-dessous ou la console (F12).'
+      categoriesError.value = tf('error_categories_retrieval', formatApiError(error))
+      loadingVerbose.value = t('error_load_failed_verbose')
     }
   } finally {
     if (!silent) {
@@ -1298,7 +1293,7 @@ const sunburstData = computed(() => {
   if (categories.value.length === 0) {
     return {
       id: 'root',
-      name: 'Aucune catégorie',
+      name: t('root_empty'),
       ticketCount: 0,
       totalTicketCount: 0,
       children: []
@@ -1374,7 +1369,7 @@ const filteredAndSortedCategories = computed(() => {
       case 'name': {
         const nameA = (a.name || '').toLowerCase()
         const nameB = (b.name || '').toLowerCase()
-        cmp = nameA.localeCompare(nameB, 'fr', { sensitivity: 'base' })
+        cmp = nameA.localeCompare(nameB, glLocale.value, { sensitivity: 'base' })
         break
       }
       case 'parent': {
@@ -1440,7 +1435,7 @@ function sortIconFor(key) {
 const categoryNameById = computed(() => {
   const m = {}
   categories.value.forEach((cat) => {
-    m[cat.id] = (cat.name && String(cat.name).trim()) ? cat.name : `Catégorie ${cat.id}`
+    m[cat.id] = (cat.name && String(cat.name).trim()) ? cat.name : tf('category_with_id', cat.id)
   })
   return m
 })
@@ -1455,14 +1450,14 @@ function parentDisplayLabel(category) {
   if (name != null) {
     return `${name} (${pid})`
   }
-  return `Parent inconnu (${pid})`
+  return tf('parent_unknown', pid)
 }
 
 // Charger les données au montage du composant
 onMounted(() => {
   const authStore = useAuthStore()
   const idx = readSunburstPeriodIndex(authStore.getApiUrl())
-  if (idx != null && idx >= 0 && idx < SUNBURST_PERIOD_STEPS.length) {
+  if (idx != null && idx >= 0 && idx < SUNBURST_PERIOD_IDS.length) {
     sunburstPeriodIndex.value = idx
   }
   loadData()
@@ -1494,7 +1489,7 @@ async function fetchHeatmapMonthlyCounts(monthRanges, categoryIds, { verboseProg
   for (let i = 0; i < monthRanges.length; i++) {
     const mr = monthRanges[i]
     if (verboseProgress) {
-      heatmapStatus.value = `Chaleur temporelle : mois ${i + 1}/12 (${mr.label})…`
+      heatmapStatus.value = tf('heatmap_status_month_loading', String(i + 1), mr.label)
     }
     const counts = await glpiApi.getTicketCountsForCategoriesInDateRange(
       categoryIds,
@@ -1504,7 +1499,13 @@ async function fetchHeatmapMonthlyCounts(monthRanges, categoryIds, { verboseProg
         concurrency: 6,
         onProgress(done, total) {
           if (verboseProgress) {
-            heatmapStatus.value = `Mois ${i + 1}/12 (${mr.label}) — ${done}/${total} catégories`
+            heatmapStatus.value = tf(
+              'heatmap_status_month_progress',
+              String(i + 1),
+              mr.label,
+              String(done),
+              String(total)
+            )
           }
         }
       }
@@ -1587,7 +1588,7 @@ async function loadHeatmapData(opts = {}) {
 
   heatmapLoading.value = true
   heatmapError.value = ''
-  heatmapStatus.value = 'Préparation des plages mensuelles…'
+  heatmapStatus.value = t('heatmap_prep_ranges')
 
   try {
     const monthlyDirectCounts = await fetchHeatmapMonthlyCounts(monthRanges, categoryIds, {
@@ -1596,8 +1597,7 @@ async function loadHeatmapData(opts = {}) {
     applyHeatmapMatrixFromCounts(monthRanges, monthlyDirectCounts, apiUrl, categoryIdsKey, windowKey)
   } catch (e) {
     console.error('[Dashboard] Chaleur temporelle', e)
-    heatmapError.value =
-      e.message || 'Impossible de charger la chaleur temporelle (vérifiez les droits API / le champ date Ticket).'
+    heatmapError.value = e.message || t('heatmap_load_failed')
   } finally {
     heatmapLoading.value = false
     heatmapStatus.value = ''
@@ -1612,7 +1612,7 @@ async function fetchHeatmapGroupsMonthlyCounts(monthRanges, groupIds, { verboseP
   for (let i = 0; i < monthRanges.length; i++) {
     const mr = monthRanges[i]
     if (verboseProgress) {
-      heatmapGroupsStatus.value = `Groupes : mois ${i + 1}/12 (${mr.label})…`
+      heatmapGroupsStatus.value = tf('heatmap_groups_month_loading', String(i + 1), mr.label)
     }
     const counts = await glpiApi.getTicketSolvedOrClosedCountsForGroupsInDateRange(
       groupIds,
@@ -1622,7 +1622,13 @@ async function fetchHeatmapGroupsMonthlyCounts(monthRanges, groupIds, { verboseP
         concurrency: 6,
         onProgress(done, total) {
           if (verboseProgress) {
-            heatmapGroupsStatus.value = `Mois ${i + 1}/12 (${mr.label}) — ${done}/${total} groupes`
+            heatmapGroupsStatus.value = tf(
+              'heatmap_groups_month_progress',
+              String(i + 1),
+              mr.label,
+              String(done),
+              String(total)
+            )
           }
         }
       }
@@ -1669,7 +1675,7 @@ async function loadGroupHeatmapData(opts = {}) {
 
   heatmapGroupsLoading.value = true
   heatmapGroupsError.value = ''
-  heatmapGroupsStatus.value = 'Chargement des groupes GLPI…'
+  heatmapGroupsStatus.value = t('heatmap_groups_loading_list')
 
   try {
     const authStore = useAuthStore()
@@ -1683,8 +1689,7 @@ async function loadGroupHeatmapData(opts = {}) {
       heatmapGroupsLoadedOnce.value = true
       heatmapGroupsCacheSavedAt.value = null
       heatmapGroupsFromDiskCache.value = false
-      heatmapGroupsError.value =
-        'Aucun groupe GLPI trouvé — vérifiez les droits API ou le profil utilisateur.'
+      heatmapGroupsError.value = t('heatmap_groups_none')
       return
     }
 
@@ -1705,15 +1710,14 @@ async function loadGroupHeatmapData(opts = {}) {
       }
     }
 
-    heatmapGroupsStatus.value = 'Préparation des plages mensuelles…'
+    heatmapGroupsStatus.value = t('heatmap_prep_ranges')
     const monthly = await fetchHeatmapGroupsMonthlyCounts(monthRanges, ids, {
       verboseProgress: true
     })
     applyHeatmapGroupsMatrix(monthRanges, monthly, groups, apiUrl, gKey, windowKey)
   } catch (e) {
     console.error('[Dashboard] Heatmap groupes', e)
-    heatmapGroupsError.value =
-      e.message || 'Impossible de charger la heatmap par groupes (vérifiez les droits API / les champs Ticket).'
+    heatmapGroupsError.value = e.message || t('heatmap_groups_load_failed')
   } finally {
     heatmapGroupsLoading.value = false
     heatmapGroupsStatus.value = ''

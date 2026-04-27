@@ -1,0 +1,426 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: CategoryManager\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-27 12:00+0000\n"
+"PO-Revision-Date: 2026-04-27 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Category visualizer"
+msgid_plural "Category visualizers"
+msgstr[0] "Category visualizer"
+msgstr[1] "Category visualizers"
+
+msgid " — update recommended"
+msgstr " — update recommended"
+
+msgid "(from local cache)"
+msgstr "(from local cache)"
+
+msgid "(local 12-month cache)"
+msgstr "(local 12-month cache)"
+
+msgid "(local groups cache)"
+msgstr "(local groups cache)"
+
+msgid "1 yr"
+msgstr "1 yr"
+
+msgid "12 months"
+msgstr "12 months"
+
+msgid "2 yr"
+msgstr "2 yr"
+
+msgid "3 yr"
+msgstr "3 yr"
+
+msgid "6 mo"
+msgstr "6 mo"
+
+msgid "90d"
+msgstr "90d"
+
+msgid "Access"
+msgstr "Access"
+
+msgid "Access to the ITIL category visualizer"
+msgstr "Access to the ITIL category visualizer"
+
+msgid "All"
+msgstr "All"
+
+msgid "Branch total"
+msgstr "Branch total"
+
+msgid "Build the interface from the plugin frontend folder, then reload this page."
+msgstr "Build the interface from the plugin frontend folder, then reload this page."
+
+msgid "categories"
+msgstr "categories"
+
+msgid "Category %s"
+msgstr "Category %s"
+
+msgid "Category tree and volumes per branch"
+msgstr "Category tree and volumes per branch"
+
+msgid "CategoryManager"
+msgstr "CategoryManager"
+
+msgid "CategoryManager access denied (profile or insufficient ticket read): %s"
+msgstr "CategoryManager access denied (profile or insufficient ticket read): %s"
+
+msgid "CategoryManager — GLPI visualization"
+msgstr "CategoryManager — GLPI visualization"
+
+msgid "Collapse all"
+msgstr "Collapse all"
+
+msgid "Collapse branch: %s"
+msgstr "Collapse branch: %s"
+
+msgid "Counting for period…"
+msgstr "Counting for period…"
+
+msgid "Data from %s"
+msgstr "Data from %s"
+
+msgid "Display"
+msgstr "Display"
+
+msgid "Display only; default order follows API load (often A→Z)."
+msgstr "Display only; default order follows API load (often A→Z)."
+
+msgid "Displayed month volume (↓)"
+msgstr "Displayed month volume (↓)"
+
+msgid "Error loading data: %s"
+msgstr "Error loading data: %s"
+
+msgid "Error retrieving categories: %s"
+msgstr "Error retrieving categories: %s"
+
+msgid "Exit full screen"
+msgstr "Exit full screen"
+
+msgid "Exit full screen (Esc)"
+msgstr "Exit full screen (Esc)"
+
+msgid "Expand branch: %s"
+msgstr "Expand branch: %s"
+
+msgid "Explore the category hierarchy and ticket volumes. Data is filtered by your profile and GLPI entities."
+msgstr "Explore the category hierarchy and ticket volumes. Data is filtered by your profile and GLPI entities."
+
+msgid "Finalizing — branch totals (including subcategories) and hierarchy levels…"
+msgstr "Finalizing — branch totals (including subcategories) and hierarchy levels…"
+
+msgid "Full history (same as table)"
+msgstr "Full history (same as table)"
+
+msgid "Full screen"
+msgstr "Full screen"
+
+msgid "Full screen chart"
+msgstr "Full screen chart"
+
+msgid "Groups"
+msgstr "Groups"
+
+msgid "Groups: month %s/12 (%s)…"
+msgstr "Groups: month %s/12 (%s)…"
+
+msgid "Heatmap of solved or closed tickets by group and month"
+msgstr "Heatmap of solved or closed tickets by group and month"
+
+msgid "Heatmap: volume per branch over 12 rolling months"
+msgstr "Heatmap: volume per branch over 12 rolling months"
+
+msgid "Hide all subcategories"
+msgstr "Hide all subcategories"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Independent of the table and tree (always full history). Period counters are cached with no automatic expiry; GLPI is called only when there is no local data for that period, or when you click Refresh counts. Filter on opening date (GLPI may fall back to date_creation)."
+msgstr "Independent of the table and tree (always full history). Period counters are cached with no automatic expiry; GLPI is called only when there is no local data for that period, or when you click Refresh counts. Filter on opening date (GLPI may fall back to date_creation)."
+
+msgid "Initializing…"
+msgstr "Initializing…"
+
+msgid "Intensity = count of solved (5) or closed (6) tickets for the month, by resolution date (solvedate) and assigned group."
+msgstr "Intensity = count of solved (5) or closed (6) tickets for the month, by resolution date (solvedate) and assigned group."
+
+msgid "Invalid \"ids\" parameter."
+msgstr "Invalid \"ids\" parameter."
+
+msgid "Invalid group_ids / start / end parameters."
+msgstr "Invalid group_ids / start / end parameters."
+
+msgid "Invalid ids / start / end parameters."
+msgstr "Invalid ids / start / end parameters."
+
+msgid "Invalid or expired CSRF token — reload the visualizer page."
+msgstr "Invalid or expired CSRF token — reload the visualizer page."
+
+msgid "ITIL categories"
+msgstr "ITIL categories"
+
+msgid "ITIL category visualization"
+msgstr "ITIL category visualization"
+
+msgid "JSON encoding failed (categories): %s"
+msgstr "JSON encoding failed (categories): %s"
+
+msgid "JSON encoding failed (group_counts_range): %s"
+msgstr "JSON encoding failed (group_counts_range): %s"
+
+msgid "JSON encoding failed (groups): %s"
+msgstr "JSON encoding failed (groups): %s"
+
+msgid "JSON encoding failed (ticket_counts): %s"
+msgstr "JSON encoding failed (ticket_counts): %s"
+
+msgid "JSON encoding failed (ticket_counts_range): %s"
+msgstr "JSON encoding failed (ticket_counts_range): %s"
+
+msgid "Level"
+msgstr "Level"
+
+msgid "Load failed — see error message below or console (F12)."
+msgstr "Load failed — see error message below or console (F12)."
+
+msgid "Load order (default)"
+msgstr "Load order (default)"
+
+msgid "Loading categories"
+msgstr "Loading categories"
+
+msgid "Loading GLPI groups…"
+msgstr "Loading GLPI groups…"
+
+msgid "Month %s/12 (%s) — %s/%s categories"
+msgstr "Month %s/12 (%s) — %s/%s categories"
+
+msgid "Month %s/12 (%s) — %s/%s groups"
+msgstr "Month %s/12 (%s) — %s/%s groups"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Name (A→Z)"
+msgstr "Name (A→Z)"
+
+msgid "No categories found"
+msgstr "No categories found"
+
+msgid "No category"
+msgstr "No category"
+
+msgid "No GLPI groups found — check API rights or user profile."
+msgstr "No GLPI groups found — check API rights or user profile."
+
+msgid "No name"
+msgstr "No name"
+
+msgid "No solved or closed tickets by assigned group in this 12-month window (check API rights or try again later)."
+msgstr "No solved or closed tickets by assigned group in this 12-month window (check API rights or try again later)."
+
+msgid "Number of categories loaded from GLPI"
+msgstr "Number of categories loaded from GLPI"
+
+msgid "Number of tickets solved or closed (GLPI statuses 5 and 6) per assigned group over the last 12 rolling months (sliding window). Resolution date (solvedate). Only groups with at least one ticket in the period appear."
+msgstr "Number of tickets solved or closed (GLPI statuses 5 and 6) per assigned group over the last 12 rolling months (sliding window). Resolution date (solvedate). Only groups with at least one ticket in the period appear."
+
+msgid "Open tickets on this category only (excluding subcategories)"
+msgstr "Open tickets on this category only (excluding subcategories)"
+
+msgid "Order of business roots follows the sort; under each expanded root, GLPI tree order. Display only (does not change GLPI)."
+msgstr "Order of business roots follows the sort; under each expanded root, GLPI tree order. Display only (does not change GLPI)."
+
+msgid "Parent category"
+msgstr "Parent category"
+
+msgid "Period (Sunburst only)"
+msgstr "Period (Sunburst only)"
+
+msgid "POST method expected."
+msgstr "POST method expected."
+
+msgid "Preparing load (GLPI session, then category list)…"
+msgstr "Preparing load (GLPI session, then category list)…"
+
+msgid "Preparing monthly ranges…"
+msgstr "Preparing monthly ranges…"
+
+msgid "Production files missing"
+msgstr "Production files missing"
+
+msgid "Proportional to tickets per branch."
+msgstr "Proportional to tickets per branch."
+
+msgid "Raw category data (debug)"
+msgstr "Raw category data (debug)"
+
+msgid "Re-run all GLPI count requests for this period"
+msgstr "Re-run all GLPI count requests for this period"
+
+msgid "Refresh"
+msgstr "Refresh"
+
+msgid "Refresh 12 months"
+msgstr "Refresh 12 months"
+
+msgid "Refresh counts"
+msgstr "Refresh counts"
+
+msgid "Refresh failed: %s"
+msgstr "Refresh failed: %s"
+
+msgid "Refresh groups"
+msgstr "Refresh groups"
+
+msgid "Refreshing data from GLPI…"
+msgstr "Refreshing data from GLPI…"
+
+msgid "Reload all requests (12 months × categories)"
+msgstr "Reload all requests (12 months × categories)"
+
+msgid "Reload group list and all counts (12 months × groups)"
+msgstr "Reload group list and all counts (12 months × groups)"
+
+msgid "Retry"
+msgstr "Retry"
+
+msgid "Rolling 1-year window"
+msgstr "Rolling 1-year window"
+
+msgid "Rolling 2-year window"
+msgstr "Rolling 2-year window"
+
+msgid "Rolling 3-year window"
+msgstr "Rolling 3-year window"
+
+msgid "Rolling 6-month window"
+msgstr "Rolling 6-month window"
+
+msgid "Rolling 90-day window"
+msgstr "Rolling 90-day window"
+
+msgid "Run `npm run build` in plugins/categorymanager/frontend"
+msgstr "Run `npm run build` in plugins/categorymanager/frontend"
+
+msgid "Search for a category…"
+msgstr "Search for a category…"
+
+msgid "Sectors by hierarchy only (angles tied to leaves), without weighting by ticket volume."
+msgstr "Sectors by hierarchy only (angles tied to leaves), without weighting by ticket volume."
+
+msgid "Sectors proportional to ticket count per branch (total including subcategories)."
+msgstr "Sectors proportional to ticket count per branch (total including subcategories)."
+
+msgid "Server error: %s"
+msgstr "Server error: %s"
+
+msgid "Session expired — log in to GLPI again and reload the visualizer."
+msgstr "Session expired — log in to GLPI again and reload the visualizer."
+
+msgid "Showing data from %s"
+msgstr "Showing data from %s"
+
+msgid "Showing the first 5 categories only"
+msgstr "Showing the first 5 categories only"
+
+msgid "Sort rows"
+msgstr "Sort rows"
+
+msgid "Step 1/3 — Connecting to GLPI API and retrieving ITIL categories…"
+msgstr "Step 1/3 — Connecting to GLPI API and retrieving ITIL categories…"
+
+msgid "Step 2/3 — %s categories received. Preparing ticket counts…"
+msgstr "Step 2/3 — %s categories received. Preparing ticket counts…"
+
+msgid "Step 3/3 — Counting tickets (full history for table/tree): preparing search/Ticket requests (0 / %s)…"
+msgstr "Step 3/3 — Counting tickets (full history for table/tree): preparing search/Ticket requests (0 / %s)…"
+
+msgid "Step 3/3 — Counting tickets: %s / %s categories processed (batched requests to GLPI)…"
+msgstr "Step 3/3 — Counting tickets: %s / %s categories processed (batched requests to GLPI)…"
+
+msgid "Structure"
+msgstr "Structure"
+
+msgid "Structure view (hierarchical angles)."
+msgstr "Structure view (hierarchical angles)."
+
+msgid "Sum: direct tickets + tickets on all subcategories (same logic as Sunburst “Tickets”)"
+msgstr "Sum: direct tickets + tickets on all subcategories (same logic as Sunburst “Tickets”)"
+
+msgid "Sunburst"
+msgstr "Sunburst"
+
+msgid "Sunburst display mode"
+msgstr "Sunburst display mode"
+
+msgid "Switch to dark mode"
+msgstr "Switch to dark mode"
+
+msgid "Switch to light mode"
+msgstr "Switch to light mode"
+
+msgid "Table"
+msgstr "Table"
+
+msgid "Temporal heatmap: month %s/12 (%s)…"
+msgstr "Temporal heatmap: month %s/12 (%s)…"
+
+msgid "This plugin requires GLPI >= 11.0."
+msgstr "This plugin requires GLPI >= 11.0."
+
+msgid "Ticket volume per branch (category + sub-trees) over the last 12 rolling months (window up to today). Use ▶ / ▼ to show subcategories under each business root. The date used is the ticket opening date (GLPI field detected: date or date_creation)."
+msgstr "Ticket volume per branch (category + sub-trees) over the last 12 rolling months (window up to today). Use ▶ / ▼ to show subcategories under each business root. The date used is the ticket opening date (GLPI field detected: date or date_creation)."
+
+msgid "Tickets"
+msgstr "Tickets"
+
+msgid "Tickets (direct)"
+msgstr "Tickets (direct)"
+
+msgid "Tickets solved or closed per assigned group over 12 rolling months"
+msgstr "Tickets solved or closed per assigned group over 12 rolling months"
+
+msgid "Total volume over 12 months (↓)"
+msgstr "Total volume over 12 months (↓)"
+
+msgid "Tree"
+msgstr "Tree"
+
+msgid "Tree order (business roots)"
+msgstr "Tree order (business roots)"
+
+msgid "Unable to count for this period."
+msgstr "Unable to count for this period."
+
+msgid "Unable to load group heatmap (check API rights / Ticket fields)."
+msgstr "Unable to load group heatmap (check API rights / Ticket fields)."
+
+msgid "Unable to load temporal heatmap (check API rights / Ticket date field)."
+msgstr "Unable to load temporal heatmap (check API rights / Ticket date field)."
+
+msgid "Unknown action."
+msgstr "Unknown action."
+
+msgid "Unknown error"
+msgstr "Unknown error"
+
+msgid "Unknown parent (%s)"
+msgstr "Unknown parent (%s)"
+
+msgid "View type"
+msgstr "View type"

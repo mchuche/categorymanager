@@ -7,17 +7,18 @@
     type="button"
     class="theme-toolbar-btn"
     :aria-pressed="themeStore.isDark"
-    :aria-label="themeStore.isDark ? 'Passer en mode clair' : 'Passer en mode sombre'"
-    :title="themeStore.isDark ? 'Passer en mode clair' : 'Passer en mode sombre'"
+    :aria-label="themeStore.isDark ? t('theme_light') : t('theme_dark')"
+    :title="themeStore.isDark ? t('theme_light') : t('theme_dark')"
     @click="themeStore.toggle()"
   >
     <ToolbarIcon :name="themeStore.isDark ? 'sun' : 'moon'" />
-    <span class="sr-only">{{ themeStore.isDark ? 'Passer en mode clair' : 'Passer en mode sombre' }}</span>
+    <span class="sr-only">{{ themeStore.isDark ? t('theme_light') : t('theme_dark') }}</span>
   </button>
 </template>
 
 <script setup>
 import { useThemeStore } from '../stores/theme'
+import { cmT as t } from '../i18n'
 import ToolbarIcon from './ToolbarIcon.vue'
 
 const themeStore = useThemeStore()

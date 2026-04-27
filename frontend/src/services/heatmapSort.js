@@ -1,6 +1,5 @@
 /**
  * Tri des lignes des cartes de chaleur (catégories racines ou groupes × mois).
- * La matrice source n’est pas modifiée : on retourne une copie avec lignes réordonnées.
  */
 
 /** @typedef {'source'|'total_desc'|'month_desc'|'alpha_asc'} HeatmapSortMode */
@@ -12,51 +11,50 @@ export const HEATMAP_SORT = {
   ALPHA_ASC: 'alpha_asc'
 }
 
-/** Options affichées pour l’onglet heatmap « racines métier » */
-export const HEATMAP_SORT_OPTIONS_CATEGORIES = [
-  { value: HEATMAP_SORT.SOURCE, label: 'Ordre arbre (racines métier)' },
-  { value: HEATMAP_SORT.TOTAL_DESC, label: 'Volume total sur 12 mois (↓)' },
-  { value: HEATMAP_SORT.MONTH_DESC, label: 'Volume du mois affiché (↓)' },
-  { value: HEATMAP_SORT.ALPHA_ASC, label: 'Nom (A → Z)' }
-]
-
-/** Options affichées pour l’onglet heatmap « groupes » */
-export const HEATMAP_SORT_OPTIONS_GROUPS = [
-  { value: HEATMAP_SORT.SOURCE, label: 'Ordre chargement (défaut)' },
-  { value: HEATMAP_SORT.TOTAL_DESC, label: 'Volume total sur 12 mois (↓)' },
-  { value: HEATMAP_SORT.MONTH_DESC, label: 'Volume du mois affiché (↓)' },
-  { value: HEATMAP_SORT.ALPHA_ASC, label: 'Nom (A → Z)' }
-]
+/**
+ * @param {(k: string) => string} t — ex. cmT depuis i18n.js
+ * @returns {Array<{ value: string, label: string }>}
+ */
+export function getHeatmapSortOptionsCategories(t) {
+  return [
+    { value: HEATMAP_SORT.SOURCE, label: t('heatmap_sort_source_cat') },
+    { value: HEATMAP_SORT.TOTAL_DESC, label: t('heatmap_sort_total_desc') },
+    { value: HEATMAP_SORT.MONTH_DESC, label: t('heatmap_sort_month_desc') },
+    { value: HEATMAP_SORT.ALPHA_ASC, label: t('heatmap_sort_alpha') }
+  ]
+}
 
 /**
- * Somme des cellules d’une ligne.
- * @param {number[][]} values
- * @param {number} rowIdx
+ * @param {(k: string) => string} t
+ * @returns {Array<{ value: string, label: string }>}
  */
+export function getHeatmapSortOptionsGroups(t) {
+  return [
+    { value: HEATMAP_SORT.SOURCE, label: t('heatmap_sort_source_grp') },
+    { value: HEATMAP_SORT.TOTAL_DESC, label: t('heatmap_sort_total_desc') },
+    { value: HEATMAP_SORT.MONTH_DESC, label: t('heatmap_sort_month_desc') },
+    { value: HEATMAP_SORT.ALPHA_ASC, label: t('heatmap_sort_alpha') }
+  ]
+}
+
 function rowTotal(values, rowIdx) {
   const row = values[rowIdx]
   if (!row || !row.length) return 0
   return row.reduce((acc, v) => acc + (Number.isFinite(Number(v)) ? Number(v) : 0), 0)
 }
 
-/**
- * Compare deux libellés de ligne (tie-break).
- * @param {string} a
- * @param {string} b
- */
-function labelCompare(a, b) {
-  return String(a).localeCompare(String(b), 'fr', { sensitivity: 'base' })
+function labelCompare(a, b, locale) {
+  const loc = locale || (typeof navigator !== 'undefined' ? navigator.language : 'en')
+  return String(a).localeCompare(String(b), loc, { sensitivity: 'base' })
 }
 
 /**
- * Réordonne les lignes d’une matrice heatmap selon le mode.
- *
  * @param {{ rowLabels: string[], columnLabels: string[], values: number[][], rootIds?: unknown[], groupIds?: number[], heatmapRowsMeta?: unknown[] } | null} matrix
  * @param {HeatmapSortMode} mode
- * @param {number} selectedMonthIndex — index colonne pour MONTH_DESC (curseur mois)
- * @returns {typeof matrix}
+ * @param {number} selectedMonthIndex
+ * @param {string} [locale]
  */
-export function sortHeatmapMatrix(matrix, mode, selectedMonthIndex) {
+export function sortHeatmapMatrix(matrix, mode, selectedMonthIndex, locale = undefined) {
   if (!matrix || !matrix.rowLabels?.length || !matrix.values?.length) {
     return matrix
   }
@@ -77,39 +75,35 @@ export function sortHeatmapMatrix(matrix, mode, selectedMonthIndex) {
       const ta = rowTotal(vals, a)
       const tb = rowTotal(vals, b)
       if (tb !== ta) return tb - ta
-      return labelCompare(matrix.rowLabels[a], matrix.rowLabels[b])
+      return labelCompare(matrix.rowLabels[a], matrix.rowLabels[b], locale)
     })
   } else if (mode === HEATMAP_SORT.MONTH_DESC) {
     indices.sort((a, b) => {
-      const va = Number(vals[a]?.[mi]) || 0
-      const vb = Number(vals[b]?.[mi]) || 0
-      if (vb !== va) return vb - va
-      return labelCompare(matrix.rowLabels[a], matrix.rowLabels[b])
+      const va = vals[a]?.[mi]
+      const vb = vals[b]?.[mi]
+      const na = Number.isFinite(Number(va)) ? Number(va) : 0
+      const nb = Number.isFinite(Number(vb)) ? Number(vb) : 0
+      if (nb !== na) return nb - na
+      return labelCompare(matrix.rowLabels[a], matrix.rowLabels[b], locale)
     })
   } else if (mode === HEATMAP_SORT.ALPHA_ASC) {
-    indices.sort((a, b) => labelCompare(matrix.rowLabels[a], matrix.rowLabels[b]))
-  } else {
-    return matrix
+    indices.sort((a, b) =>
+      labelCompare(matrix.rowLabels[a], matrix.rowLabels[b], locale)
+    )
   }
 
-  const rowLabels = indices.map((i) => matrix.rowLabels[i])
-  const values = indices.map((i) => [...matrix.values[i]])
+  const newRowLabels = indices.map((i) => matrix.rowLabels[i])
+  const newValues = indices.map((i) => vals[i])
+  const meta = matrix.heatmapRowsMeta
+  const newMeta = meta ? indices.map((i) => meta[i]) : undefined
 
   const out = {
     ...matrix,
-    rowLabels,
-    values
+    rowLabels: newRowLabels,
+    values: newValues
   }
-
-  if (Array.isArray(matrix.rootIds) && matrix.rootIds.length === nRows) {
-    out.rootIds = indices.map((i) => matrix.rootIds[i])
+  if (newMeta) {
+    out.heatmapRowsMeta = newMeta
   }
-  if (Array.isArray(matrix.groupIds) && matrix.groupIds.length === nRows) {
-    out.groupIds = indices.map((i) => matrix.groupIds[i])
-  }
-  if (Array.isArray(matrix.heatmapRowsMeta) && matrix.heatmapRowsMeta.length === nRows) {
-    out.heatmapRowsMeta = indices.map((i) => matrix.heatmapRowsMeta[i])
-  }
-
   return out
 }

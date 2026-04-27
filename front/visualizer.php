@@ -1,75 +1,99 @@
 <?php
 /**
  * -------------------------------------------------------------------------
- * Page front — CategoryManager (corps de page avec l’app Vue)
+ * Page front — CategoryManager (corps de page via Twig + option SPA Vue)
  * -------------------------------------------------------------------------
- * Après `npm run build` dans frontend/, les assets sont servis
- * depuis plugins/categorymanager/public/ (voir vite.config.js).
- * Les données viennent de ajax/native.php (session GLPI, pas d’API REST navigateur).
- * Tant que le build n’existe pas, un message invite à lancer le build.
+ * Enveloppe « corporate » GLPI : Html::header / footer + template Twig.
+ * Injection window.__CM_I18N__ (traductions JS) et __CM_LOCALE__ (langue GLPI).
  * -------------------------------------------------------------------------
  */
 
 require_once __DIR__ . '/../../../inc/includes.php';
 
-// Droit : matrice Profils (plugin_categorymanager) ou repli ticket si clé absente — voir PluginCategorymanagerVisualizer::checkVisualizerAccess()
+use Glpi\Application\View\TemplateRenderer;
+
+include_once Plugin::getPhpDir('categorymanager') . '/inc/i18n_js.class.php';
+
 PluginCategorymanagerVisualizer::checkVisualizerAccess();
 
 Html::header(
-    __('Visualiseur de catégories', 'categorymanager'),
+    __('Category visualizer', 'categorymanager'),
     $_SERVER['PHP_SELF'],
     'tools',
     'plugincategorymanagervisualizer'
 );
 
 $pluginRoot   = Plugin::getPhpDir('categorymanager');
-// Répertoire servi par le serveur web : .../plugins/categorymanager/public/
 $publicFsPath = $pluginRoot . '/public';
 $indexPath    = $publicFsPath . '/index.html';
-$webBase      = Plugin::getWebDir('categorymanager') . '/public';
+$pluginWeb    = Plugin::getWebDir('categorymanager');
+$nativeApi    = $pluginWeb . '/ajax/native.php';
+$csrfToken    = Session::getNewCSRFToken();
+$locale       = Session::getLanguage() ?? 'en_GB';
 
-if (!is_readable($indexPath)) {
-    // Pas encore de build Vite : message explicite (étape pipeline CI / local)
-    echo "<div class='alert alert-info'>";
-    echo "<p><strong>CategoryManager</strong> : les fichiers de production ne sont pas présents.</p>";
-    echo "<p>Exécutez <code>npm run build</code> dans <code>plugins/categorymanager/frontend</code>, ";
-    echo "puis rechargez cette page.</p>";
-    echo "</div>";
-    Html::footer();
-    return;
-}
+$hasVueBuild = is_readable($indexPath);
 
-/**
- * Mode « PHP natif » : le JS appelle ajax/native.php (session GLPI, moteur de recherche).
- * __CM_GLPI_CSRF_TOKEN__ : jeton pour les POST JSON (Session::validateCSRF avec préservation).
- */
-$pluginWeb = Plugin::getWebDir('categorymanager');
-$nativeApi  = $pluginWeb . '/ajax/native.php';
-$csrfToken  = Session::getNewCSRFToken();
-
-echo '<script>';
-echo 'window.__CM_NATIVE_API__=' . json_encode($nativeApi, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES) . ';';
-echo 'window.__CM_GLPI_CSRF_TOKEN__=' . json_encode($csrfToken, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES) . ';';
-echo 'window.__CM_PLUGIN_WEB__=' . json_encode($pluginWeb, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES) . ';';
-echo "</script>\n";
-
-/**
- * Le build Vite génère index.html avec &lt;link&gt; (CSS) et &lt;script&gt; (JS module)
- * en chemins absolus sous /plugins/categorymanager/public/...
- * Ordre : feuilles de style d’abord, puis scripts (évite flash sans styles).
- */
-$indexContent = (string) file_get_contents($indexPath);
-if (preg_match_all('/<link[^>]+rel="stylesheet"[^>]+href="([^"]+)"[^>]*>/i', $indexContent, $mCss)) {
-    foreach ($mCss[1] as $href) {
-        echo '<link rel="stylesheet" href="' . htmlspecialchars($href) . '">' . "\n";
+$vueStyles = [];
+$vueScripts = [];
+if ($hasVueBuild) {
+    $indexContent = (string) file_get_contents($indexPath);
+    if (preg_match_all('/<link[^>]+rel="stylesheet"[^>]+href="([^"]+)"[^>]*>/i', $indexContent, $mCss)) {
+        foreach ($mCss[1] as $href) {
+            $vueStyles[] = $href;
+        }
     }
-}
-if (preg_match_all('/<script[^>]+src="([^"]+)"[^>]*>\\s*<\\/script>/i', $indexContent, $mJs)) {
-    foreach ($mJs[1] as $src) {
-        echo '<script type="module" src="' . htmlspecialchars($src) . '"></script>' . "\n";
+    if (preg_match_all('/<script[^>]+src="([^"]+)"[^>]*>\\s*<\\/script>/i', $indexContent, $mJs)) {
+        foreach ($mJs[1] as $src) {
+            $vueScripts[] = $src;
+        }
     }
 }
 
-echo '<div id="app" class="container-fluid" style="min-height:50vh"></div>' . "\n";
+/*
+ * Flags JSON pour injection dans une balise <script> :
+ * sans JSON_HEX_TAG, une séquence "</script>" dans une chaîne traduite (gettext) fermerait
+ * la balise HTML trop tôt et peut provoquer une page invalide / erreur 500 côté navigateur ou GLPI.
+ * Cohérent avec les autres window.__CM_* ci-dessous (déjà JSON_HEX_*).
+ */
+$cmJsonFlags = JSON_UNESCAPED_UNICODE
+    | JSON_HEX_TAG
+    | JSON_HEX_AMP
+    | JSON_HEX_APOS
+    | JSON_HEX_QUOT
+    | (defined('JSON_INVALID_UTF8_SUBSTITUTE') ? JSON_INVALID_UTF8_SUBSTITUTE : 0);
+
+$jsI18nJson = json_encode(
+    PluginCategorymanagerI18n::getJsMessages(),
+    $cmJsonFlags
+);
+
+// Globales JS : 5 affectations concaténées (API native, CSRF, web plugin, locale, catalogue i18n).
+$globalsScript = sprintf(
+    '<script>%s%s%s%s%s</script>',
+    'window.__CM_NATIVE_API__=' . json_encode($nativeApi, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES) . ';',
+    'window.__CM_GLPI_CSRF_TOKEN__=' . json_encode($csrfToken, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES) . ';',
+    'window.__CM_PLUGIN_WEB__=' . json_encode($pluginWeb, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES) . ';',
+    'window.__CM_LOCALE__=' . json_encode($locale, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES) . ';',
+    'window.__CM_I18N__=' . ($jsI18nJson !== false ? $jsI18nJson : '{}') . ';'
+);
+
+TemplateRenderer::getInstance()->display('@categorymanager/visualizer_page.html.twig', [
+    'card_title' => __('ITIL category visualization', 'categorymanager'),
+    'card_intro' => __(
+        'Explore the category hierarchy and ticket volumes. Data is filtered by your profile and GLPI entities.',
+        'categorymanager'
+    ),
+    'icon'       => PluginCategorymanagerVisualizer::getIcon(),
+    'has_vue_build' => $hasVueBuild,
+    'globals_script' => $globalsScript,
+    'vue_styles' => $vueStyles,
+    'vue_scripts' => $vueScripts,
+    'alert_title' => __('Production files missing', 'categorymanager'),
+    'alert_body' => __(
+        'Build the interface from the plugin frontend folder, then reload this page.',
+        'categorymanager'
+    ),
+    'alert_command' => __('Run `npm run build` in plugins/categorymanager/frontend', 'categorymanager'),
+]);
 
 Html::footer();

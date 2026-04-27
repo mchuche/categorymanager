@@ -154,12 +154,13 @@ Si vous hébergez l’application **en dehors** de GLPI tout en gardant le proxy
 
 ```
 plugins/categorymanager/
+  templates/           # Twig — enveloppe GLPI (cartes) autour du montage Vue en Mode B
   frontend/            # Projet Vue + server/ FastAPI (Mode A uniquement pour Python)
     server/app/        # FastAPI — proxy REST + cache
     src/services/      # glpiApi.js : détection native (__CM_NATIVE_API__) vs /api/glpi/…
   ajax/native.php      # API JSON Mode B (session GLPI)
   public/              # Sortie du `npm run build` (Vite → outDir)
-  front/visualizer.php # Injecte les globales JS pour le Mode B
+  front/visualizer.php # Header/footer GLPI + Twig + globales JS + bundle Vue
   docs/                # PRD, stack, références API (hors code applicatif)
 ```
 

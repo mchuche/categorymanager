@@ -33,10 +33,10 @@ class PluginCategorymanagerProfile extends Profile
         return [
             [
                 'itemtype' => 'PluginCategorymanagerVisualizer',
-                'label'    => __('Accès au visualiseur de catégories ITIL', 'categorymanager'),
+                'label'    => __('Access to the ITIL category visualizer', 'categorymanager'),
                 'field'    => 'plugin_categorymanager',
                 'rights'   => [
-                    READ => __('Lecture'),
+                    READ => __('Read'),
                 ],
             ],
         ];
@@ -92,7 +92,7 @@ class PluginCategorymanagerProfile extends Profile
             [
                 'canedit'       => $canedit,
                 'default_class' => 'tab_bg_2',
-                'title'         => __('Accès', 'categorymanager'),
+                'title'         => __('Access', 'categorymanager'),
             ]
         );
 

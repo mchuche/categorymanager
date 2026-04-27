@@ -1,0 +1,54 @@
+{#
+ # -------------------------------------------------------------------------
+ # CategoryManager — page visualiseur (interface « corporate » GLPI)
+ # -------------------------------------------------------------------------
+ # Corps de page entre Html::header et Html::footer : cartes Tabler/Bootstrap
+ # comme le reste de l’interface. L’application Vue est montée sur #app si le
+ # build existe ; les données restent exposées via ajax/native.php (session).
+ # -------------------------------------------------------------------------
+ #}
+
+<div class="container-fluid py-3">
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+            <div class="d-flex align-items-start gap-3 flex-wrap">
+                <span class="avatar avatar-md bg-azure-lt" aria-hidden="true">
+                    <i class="{{ icon }} fs-2"></i>
+                </span>
+                <div class="flex-grow-1">
+                    <h2 class="card-title mb-2">{{ card_title }}</h2>
+                    <p class="text-muted mb-0">{{ card_intro }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if has_vue_build %}
+        {# Jetons globaux pour le bundle Vue (ajax/native.php + CSRF POST JSON) #}
+        {{ globals_script|raw }}
+
+        {# Feuilles de styles du build Vite #}
+        {% for href in vue_styles %}
+            <link rel="stylesheet" href="{{ href }}">
+        {% endfor %}
+
+        {# Point de montage de l’SPA Vue — métier inchangé, JS toujours autorisé #}
+        <div id="app" class="container-fluid cm-vue-root" style="min-height:50vh" role="main"></div>
+
+        {# Modules ES du build #}
+        {% for src in vue_scripts %}
+            <script type="module" src="{{ src }}"></script>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info important">
+            <div class="d-flex align-items-start gap-2">
+                <i class="ti ti-info-circle fs-2" aria-hidden="true"></i>
+                <div>
+                    <strong>{{ alert_title }}</strong>
+                    <p class="mb-1">{{ alert_body }}</p>
+                    <p class="mb-0 font-monospace small">{{ alert_command }}</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
