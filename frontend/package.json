@@ -1,0 +1,25 @@
+{
+  "name": "categorie-manager",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Visualiseur de catégories GLPI avec graphique Sunburst",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "cd server && python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000"
+  },
+  "dependencies": {
+    "vue": "^3.4.21",
+    "pinia": "^2.1.7",
+    "axios": "^1.6.7",
+    "d3": "^7.9.0"
+  },
+  "engines": {
+    "node": ">=16.14.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.6.2",
+    "vite": "^4.5.5"
+  }
+}

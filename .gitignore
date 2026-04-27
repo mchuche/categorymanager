@@ -1,0 +1,53 @@
+# =============================================================================
+# CategoryManager — racine du plugin GLPI
+# =============================================================================
+# Le projet Vue / Vite vit dans frontend/ ; voir aussi frontend/.gitignore.
+
+# -----------------------------------------------------------------------------
+# Dépendances Node (front — répertoire frontend/)
+# -----------------------------------------------------------------------------
+frontend/node_modules/
+
+# -----------------------------------------------------------------------------
+# Variables d’environnement et secrets (ne jamais versionner)
+# -----------------------------------------------------------------------------
+.env
+.env.*
+frontend/.env
+frontend/.env.*
+frontend/server/.env
+
+# -----------------------------------------------------------------------------
+# Backend Python de développement (FastAPI — frontend/server/)
+# -----------------------------------------------------------------------------
+frontend/server/.venv/
+frontend/server/**/__pycache__/
+**/__pycache__/
+*.py[cod]
+# Cache SQLite du proxy FastAPI en local uniquement
+frontend/server/data/*.sqlite3
+
+# -----------------------------------------------------------------------------
+# IDE / système
+# -----------------------------------------------------------------------------
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+*.swp
+*.suo
+
+# -----------------------------------------------------------------------------
+# Journaux
+# -----------------------------------------------------------------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# -----------------------------------------------------------------------------
+# Sortie de build Vite : plugins/categorymanager/public/
+# -----------------------------------------------------------------------------
+# Décommentez la ligne suivante si vous choisissez de NE PAS versionner les JS/CSS
+# compilés (chaque déploiement devra alors exécuter npm run build).
+# public/

@@ -1,0 +1,44 @@
+# CategorieManager — front + server/ (développement) — chemins relatifs à ce dossier.
+# Projet à la racine du plugin : plugins/categorymanager/frontend/
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+server/.env
+
+# Cache SQLite backend (développement local)
+server/data/*.sqlite3
+
+# Python
+__pycache__/
+*.py[cod]
+server/.venv/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*

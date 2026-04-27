@@ -1,0 +1,217 @@
+/**
+ * Thème global CategorieManager : variables CSS pour le mode clair et le mode sombre.
+ * Le sélecteur [data-theme="dark"] sur <html> est appliqué par le store Pinia (stores/theme.js).
+ * color-scheme aide les navigateurs à styliser champs natifs (scrollbars, inputs) de façon cohérente.
+ */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --app-bg: #f5f5f5;
+  --app-surface: #ffffff;
+  --app-text: #333333;
+  --app-text-muted: #666666;
+  --app-text-soft: #888888;
+  --app-border: #dddddd;
+  --app-border-soft: #eeeeee;
+  --app-primary: #667eea;
+  --app-primary-hover: #5568d3;
+  --app-primary-muted: #5c6bc0;
+  --app-danger: #dc3545;
+  --app-danger-hover: #c82333;
+  --app-warning-fg: #e65100;
+  --app-success: #28a745;
+
+  --app-header-bg: #ffffff;
+  --app-header-shadow: rgba(0, 0, 0, 0.1);
+  --app-card-shadow: rgba(0, 0, 0, 0.1);
+
+  --app-input-bg: #ffffff;
+  --app-input-border: #e0e0e0;
+  --app-input-focus-ring: rgba(102, 126, 234, 0.1);
+
+  --app-error-bg: #ffeeee;
+  --app-error-border: #ffcccc;
+  --app-error-text: #cc3333;
+
+  --app-dev-info-bg: #f0f0f0;
+  --app-login-gradient-start: #667eea;
+  --app-login-gradient-end: #764ba2;
+  --app-login-btn-shadow: rgba(102, 126, 234, 0.4);
+
+  --app-spinner-track: #f3f3f3;
+
+  --app-table-row-hover: #f5f5f5;
+  --app-table-text: #333333;
+  --app-tab-inactive: #666666;
+
+  --app-sunburst-zone-bg: #f9f9f9;
+  --app-sunburst-fullscreen-bg: #f5f5f5;
+  --app-sunburst-hint: #607d8b;
+  --app-mode-btn-bg: #ffffff;
+  --app-mode-btn-border: #cfd8dc;
+  --app-mode-btn-text: #546e7a;
+  --app-mode-btn-hover-bg: #eceff1;
+  --app-mode-btn-hover-border: #b0bec5;
+
+  --app-tree-bg: #ffffff;
+  --app-tree-root-bg: #f0f4ff;
+  --app-tree-hover: #f5f5f5;
+  --app-tree-leaf-dot: #cccccc;
+
+  --app-debug-bg: #f5f5f5;
+  --app-debug-pre-bg: #ffffff;
+
+  /* Tri tableau : survol sur en-tête (thead déjà coloré) */
+  --app-th-sort-hover: rgba(255, 255, 255, 0.12);
+  --app-th-sort-focus: #ffffff;
+
+  /* Sunburst D3 : séparation des secteurs et texte (lus aussi en JS) */
+  --sunburst-arc-stroke: #ffffff;
+  /* Contour « halo » derrière le texte pour le détacher des couleurs de secteurs */
+  --sunburst-label-stroke: rgba(255, 255, 255, 0.94);
+  --sunburst-label-fill: #333333;
+  --sunburst-hub-fill: #ffffff;
+  --sunburst-hub-fill-hover: #e8f5e9;
+  --sunburst-hub-stroke: #4caf50;
+  --sunburst-hub-icon: #2e7d32;
+
+  /* Contrôles sous le graphique (scoped SunburstChart) */
+  --sunburst-reset-bg: #4caf50;
+  --sunburst-reset-hover: #45a049;
+  --sunburst-info-text: #666666;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --app-bg: #121212;
+  --app-surface: #1e1e1e;
+  --app-text: #e8e8e8;
+  --app-text-muted: #b0b0b0;
+  --app-text-soft: #888888;
+  --app-border: #3d3d3d;
+  --app-border-soft: #2a2a2a;
+  --app-primary: #8b9cf4;
+  --app-primary-hover: #a5b4fc;
+  --app-primary-muted: #7c8cdb;
+  --app-danger: #f56565;
+  --app-danger-hover: #e53e3e;
+  --app-warning-fg: #ffb74d;
+  --app-success: #48bb78;
+
+  --app-header-bg: #1a1a1a;
+  --app-header-shadow: rgba(0, 0, 0, 0.45);
+  --app-card-shadow: rgba(0, 0, 0, 0.35);
+
+  --app-input-bg: #2a2a2a;
+  --app-input-border: #444444;
+  --app-input-focus-ring: rgba(139, 156, 244, 0.2);
+
+  --app-error-bg: #3d1f1f;
+  --app-error-border: #662222;
+  --app-error-text: #ff8a8a;
+
+  --app-dev-info-bg: #2a2a2a;
+  --app-login-gradient-start: #3d4a8f;
+  --app-login-gradient-end: #5a3d6e;
+  --app-login-btn-shadow: rgba(0, 0, 0, 0.35);
+
+  --app-spinner-track: #333333;
+
+  --app-table-row-hover: #2a2a2a;
+  --app-table-text: #e8e8e8;
+  --app-tab-inactive: #b0b0b0;
+
+  --app-sunburst-zone-bg: #252525;
+  --app-sunburst-fullscreen-bg: #121212;
+  --app-sunburst-hint: #90a4ae;
+  --app-mode-btn-bg: #2a2a2a;
+  --app-mode-btn-border: #4a4a4a;
+  --app-mode-btn-text: #cfd8dc;
+  --app-mode-btn-hover-bg: #333333;
+  --app-mode-btn-hover-border: #5a5a5a;
+
+  --app-tree-bg: #1e1e1e;
+  --app-tree-root-bg: #252535;
+  --app-tree-hover: #2a2a2a;
+  --app-tree-leaf-dot: #555555;
+
+  --app-debug-bg: #252525;
+  --app-debug-pre-bg: #1a1a1a;
+
+  --app-th-sort-hover: rgba(255, 255, 255, 0.12);
+  --app-th-sort-focus: #ffffff;
+
+  --sunburst-arc-stroke: #1e1e1e;
+  --sunburst-label-stroke: rgba(20, 20, 20, 0.92);
+  --sunburst-label-fill: #e8e8e8;
+  --sunburst-hub-fill: #2a2a2a;
+  --sunburst-hub-fill-hover: #1b3320;
+  --sunburst-hub-stroke: #66bb6a;
+  --sunburst-hub-icon: #a5d6a7;
+
+  --sunburst-reset-bg: #388e3c;
+  --sunburst-reset-hover: #4caf50;
+  --sunburst-info-text: #b0b0b0;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Boutons icône (en-tête dashboard, bascule thème login) : même taille et style */
+/* -------------------------------------------------------------------------- */
+
+.theme-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
+  background: var(--app-surface);
+  color: var(--app-text-muted);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.theme-toolbar-btn:hover {
+  background: var(--app-mode-btn-hover-bg);
+  border-color: var(--app-mode-btn-hover-border);
+  color: var(--app-text);
+}
+
+.theme-toolbar-btn:focus-visible {
+  outline: 2px solid var(--app-primary);
+  outline-offset: 2px;
+}
+
+.theme-toolbar-btn:active {
+  transform: scale(0.97);
+}
+
+/* Déconnexion : survol rouge cohérent avec l’ancien bouton */
+.theme-toolbar-btn--danger:hover {
+  background: var(--app-danger);
+  border-color: var(--app-danger);
+  color: #ffffff;
+}
+
+.theme-toolbar-btn--danger:hover:active {
+  background: var(--app-danger-hover);
+  border-color: var(--app-danger-hover);
+}
+
+/* Texte réservé aux lecteurs d’écran (accessibilité) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
