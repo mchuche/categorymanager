@@ -1,5 +1,5 @@
 /**
- * Traductions CategoryManager injectées par PHP ({@see PluginCategorymanagerI18n})
+ * Traductions CategoryManager injectées par PHP ({@see GlpiPlugin\\Categorymanager\\I18n\\JsCatalog::getJsMessages()})
  * dans window.__CM_I18N__ selon la langue GLPI active.
  */
 

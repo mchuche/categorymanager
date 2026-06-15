@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+   <name>CategoryManager</name>
+   <key>categorymanager</key>
+   <state>stable</state>
+   <description>
+      <short>
+         <en>ITIL category visualizer for GLPI (Sunburst, table, tree, heatmaps).</en>
+         <fr>Visualiseur de catégories ITIL pour GLPI (Sunburst, tableau, arbre, cartes de chaleur).</fr>
+      </short>
+      <long>
+         <en>Explore the ITIL category hierarchy and ticket volumes with an embedded Vue interface. Data is filtered by profile and entities via the GLPI session.</en>
+         <fr>Explorez la hiérarchie des catégories ITIL et les volumes de tickets via une interface Vue intégrée. Les données respectent le profil et les entités de la session GLPI.</fr>
+      </long>
+   </description>
+   <homepage>https://github.com/mchuche/categorymanager</homepage>
+   <download>https://github.com/mchuche/categorymanager/releases</download>
+   <issues>https://github.com/mchuche/categorymanager/issues</issues>
+   <readme>https://github.com/mchuche/categorymanager/blob/main/README.md</readme>
+   <authors>
+      <author>mchuche</author>
+   </authors>
+   <versions>
+      <version>
+         <num>0.2.0</num>
+         <compatibility>~11.0.0</compatibility>
+      </version>
+   </versions>
+</root>

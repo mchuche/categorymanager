@@ -4,7 +4,7 @@
  # -------------------------------------------------------------------------
  # Corps de page entre Html::header et Html::footer : cartes Tabler/Bootstrap
  # comme le reste de l’interface. L’application Vue est montée sur #app si le
- # build existe ; les données restent exposées via ajax/native.php (session).
+ # build existe ; les données restent exposées via route /native (session).
  # -------------------------------------------------------------------------
  #}
 
@@ -24,7 +24,7 @@
     </div>
 
     {% if has_vue_build %}
-        {# Jetons globaux pour le bundle Vue (ajax/native.php + CSRF POST JSON) #}
+        {# Jetons globaux pour le bundle Vue (route /native + CSRF POST JSON) #}
         {{ globals_script|raw }}
 
         {# Feuilles de styles du build Vite #}

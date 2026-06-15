@@ -68,8 +68,8 @@ PLURAL_FR = (
     ["Visualiseur de catégories", "Visualiseurs de catégories"],
 )
 
-# Dictionnaire msgid → msgstr pour PluginCategorymanagerI18n::getJsMessages().
-# À tenir à jour lors de chaque nouvelle clé dans inc/i18n_js.class.php (sinon gettext
+# Dictionnaire msgid → msgstr pour JsCatalog::getJsMessages().
+# À tenir à jour lors de chaque nouvelle clé dans src/I18n/JsCatalog.php (sinon gettext
 # retombe sur l’anglais pour cette chaîne tant que le .po n’est pas régénéré manuellement).
 JS_FR: dict[str, str] = {
     "Initializing…": "Initialisation…",

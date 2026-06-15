@@ -36,9 +36,6 @@
   --app-error-text: #cc3333;
 
   --app-dev-info-bg: #f0f0f0;
-  --app-login-gradient-start: #667eea;
-  --app-login-gradient-end: #764ba2;
-  --app-login-btn-shadow: rgba(102, 126, 234, 0.4);
 
   --app-spinner-track: #f3f3f3;
 
@@ -114,9 +111,6 @@
   --app-error-text: #ff8a8a;
 
   --app-dev-info-bg: #2a2a2a;
-  --app-login-gradient-start: #3d4a8f;
-  --app-login-gradient-end: #5a3d6e;
-  --app-login-btn-shadow: rgba(0, 0, 0, 0.35);
 
   --app-spinner-track: #333333;
 
@@ -158,7 +152,7 @@
 }
 
 /* -------------------------------------------------------------------------- */
-/* Boutons icône (en-tête dashboard, bascule thème login) : même taille et style */
+/* Boutons icône (en-tête dashboard, bascule thème) : même taille et style */
 /* -------------------------------------------------------------------------- */
 
 .theme-toolbar-btn {
@@ -189,18 +183,6 @@
 
 .theme-toolbar-btn:active {
   transform: scale(0.97);
-}
-
-/* Déconnexion : survol rouge cohérent avec l’ancien bouton */
-.theme-toolbar-btn--danger:hover {
-  background: var(--app-danger);
-  border-color: var(--app-danger);
-  color: #ffffff;
-}
-
-.theme-toolbar-btn--danger:hover:active {
-  background: var(--app-danger-hover);
-  border-color: var(--app-danger-hover);
 }
 
 /* Texte réservé aux lecteurs d’écran (accessibilité) */

@@ -1,12 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
+namespace GlpiPlugin\Categorymanager\Service;
+
+use CommonITILActor;
+use Group;
+use Group_Ticket;
+use ITILCategory;
+
+
 /**
  * -------------------------------------------------------------------------
  * Données CategoryManager — accès natif GLPI (sans apirest.php ni jetons)
  * -------------------------------------------------------------------------
  * Toutes les requêtes s’exécutent dans la session web courante : entités,
  * profils et droits sont ceux de l’utilisateur connecté (comme un écran
- * GLPI classique). Le front Vue consomme le JSON produit par ajax/native.php.
+ * GLPI classique). Le front Vue consomme le JSON produit par route Symfony /native.
  *
  * Comptages tickets : agrégations SQL directes (GROUP BY), et non plus le
  * moteur SearchEngine par catégorie — évite les timeouts / mémoire quand il
@@ -14,14 +24,11 @@
  * -------------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
 
 /**
  * Chargement et agrégations pour le visualiseur (catégories, tickets, groupes).
  */
-final class PluginCategorymanagerNative
+final class NativeDataService
 {
     /**
      * Taille max des listes d’ids dans une seule clause `IN (...)` pour les agrégations tickets.
@@ -211,14 +218,14 @@ final class PluginCategorymanagerNative
             return $counts;
         }
 
-        $gt = \Group_Ticket::getTable();
+        $gt = Group_Ticket::getTable();
 
         $chunk = self::TICKET_COUNT_IN_CHUNK;
         $n = count($positiveGids);
         for ($off = 0; $off < $n; $off += $chunk) {
             $slice = array_slice($positiveGids, $off, $chunk);
             $where = [
-                $gt . '.type'   => (int) \CommonITILActor::ASSIGN,
+                $gt . '.type'   => (int) CommonITILActor::ASSIGN,
                 $gt . '.groups_id' => $slice,
                 'glpi_tickets.is_deleted' => 0,
                 'glpi_tickets.status'     => [5, 6],

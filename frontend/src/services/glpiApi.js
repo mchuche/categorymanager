@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 /**
- * Taille max d’ids par POST vers `ajax/native.php` (ticket_counts, plages, groupes).
+ * Taille max d’ids par POST vers `route /native` (ticket_counts, plages, groupes).
  * Plusieurs requêtes courtes évitent un seul POST très long → 504 Gateway Time-out (nginx).
  */
 const CM_NATIVE_POST_CHUNK = 75
@@ -9,7 +9,7 @@ const CM_NATIVE_POST_CHUNK = 75
 /**
  * Service GLPI : deux transports possibles.
  * - **Développement** : proxy Vite `/api/glpi/...` → FastAPI (jetons côté serveur Python).
- * - **Plugin GLPI** : `ajax/native.php` (PHP, session GLPI, aucun jeton REST).
+ * - **Plugin GLPI** : `route /native` (PHP, session GLPI, aucun jeton REST).
  */
 class GLPIApiService {
   constructor() {
@@ -35,7 +35,7 @@ class GLPIApiService {
   }
 
   /**
-   * URL de base du script ajax/native.php (sans slash final).
+   * URL de base du script route /native (sans slash final).
    */
   _nativeEndpointBase() {
     return String(window.__CM_NATIVE_API__ || '').replace(/\/?$/, '')
@@ -82,7 +82,7 @@ class GLPIApiService {
   }
 
   /**
-   * Vérifie la réponse JSON de `ajax/native.php` ({ ok: true, … }) ou l’erreur standard GLPI / Symfony
+   * Vérifie la réponse JSON de `route /native` ({ ok: true, … }) ou l’erreur standard GLPI / Symfony
    * (`{ error: true, title, message, trace? }` quand une exception n’est pas interceptée côté PHP).
    *
    * @param {{ data?: unknown }} res — réponse Axios

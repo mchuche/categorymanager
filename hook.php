@@ -4,7 +4,7 @@
  * CategoryManager — hooks d'installation / désinstallation (GLPI 11)
  * -------------------------------------------------------------------------
  * Droits profils : nom technique `plugin_categorymanager` (lecture = accès
- * visualiseur + ajax/native.php).
+ * visualiseur + route Symfony /native).
  *
  * Installation :
  * - Création d’une ligne par profil si absente ; **lecture accordée par défaut**

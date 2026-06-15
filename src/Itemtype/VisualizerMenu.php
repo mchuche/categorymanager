@@ -1,27 +1,31 @@
 <?php
+
+declare(strict_types=1);
+
+namespace GlpiPlugin\Categorymanager\Itemtype;
+
+use CommonGLPI;
+use Session;
+
 /**
  * -------------------------------------------------------------------------
  * Classe d’ancrage menu — visualiseur de catégories (CategoryManager)
  * -------------------------------------------------------------------------
  * CommonGLPI fournit l’intégration au menu latéral. On force l’URL vers
- * front/visualizer.php pour éviter l’ambiguïté du routeur GLPI 11 avec
+ * route Symfony /visualizer pour éviter l’ambiguïté du routeur GLPI 11 avec
  * un fichier front/menu.php homonyme d’une classe (cf. stockmanager).
  * -------------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
 /**
  * Point d’entrée utilisateur : page embarquant l’application Vue buildée.
  */
-class PluginCategorymanagerVisualizer extends CommonGLPI
+class VisualizerMenu extends CommonGLPI
 {
     /**
      * Droit technique stocké dans glpi_profilerights (colonne name).
      * Réglé par profil : Configuration > Profils > [profil] > onglet CategoryManager.
-     * @see PluginCategorymanagerProfile::getAllRights()
+     * @see \GlpiPlugin\Categorymanager\Profile\ProfileTab::getAllRights()
      */
     public static $rightname = 'plugin_categorymanager';
 
@@ -50,11 +54,11 @@ class PluginCategorymanagerVisualizer extends CommonGLPI
 
         $root = $full ? ($CFG_GLPI['root_doc'] ?? '') : '';
 
-        return $root . '/plugins/categorymanager/front/visualizer.php';
+        return $root . '/plugins/categorymanager/visualizer';
     }
 
     /**
-     * Indique si l’utilisateur courant peut ouvrir le visualiseur (menu + page + ajax).
+     * Indique si l’utilisateur courant peut ouvrir le visualiseur (menu + page + API native).
      *
      * Règles :
      * - Si la session contient une valeur pour `plugin_categorymanager` (ligne en base) : on applique

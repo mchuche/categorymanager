@@ -1,10 +1,10 @@
 <?php
 /**
  * -------------------------------------------------------------------------
- * CategoryManager — plugin GLPI 11
+ * CategoryManager — plugin GLPI 11 (architecture moderne : PSR-4 + contrôleurs)
  * -------------------------------------------------------------------------
- * Visualiseur de catégories ITIL (Sunburst, etc.) — point d’entrée enregistré
- * par le noyau GLPI au chargement.
+ * Point d'entrée enregistré par le noyau GLPI au chargement.
+ * Les routes HTTP sont déclarées dans src/Controller/ (préfixe /plugins/categorymanager/).
  * -------------------------------------------------------------------------
  */
 
@@ -14,28 +14,36 @@ if (!defined('GLPI_ROOT')) {
 
 include_once __DIR__ . '/hook.php';
 
+use GlpiPlugin\Categorymanager\Itemtype\VisualizerMenu;
+use GlpiPlugin\Categorymanager\Profile\ProfileTab;
+
 /** Version affichée dans Configuration > Plugins */
-define('PLUGIN_CATEGORYMANAGER_VERSION', '0.1.2');
+define('PLUGIN_CATEGORYMANAGER_VERSION', '0.2.0');
 
 /**
- * Initialisation : hooks, classes, menu.
+ * Initialisation : autoload Composer, hooks, classes namespaced.
  */
 function plugin_init_categorymanager(): void
 {
     global $PLUGIN_HOOKS;
 
+    // Autoload PSR-4 (GlpiPlugin\Categorymanager\) — requis pour contrôleurs et services
+    $autoload = __DIR__ . '/vendor/autoload.php';
+    if (is_readable($autoload)) {
+        require_once $autoload;
+    }
+
     $PLUGIN_HOOKS['csrf_compliant']['categorymanager'] = true;
 
-    // Chiffrement des jetons dans glpi_configs (clé sodium GLPI)
-    // Entrée dans le menu « Outils » (clé interne GLPI : tools) — cf. stockmanager
+    // Entrée dans le menu « Outils » (clé interne GLPI : tools)
     $PLUGIN_HOOKS['menu_toadd']['categorymanager'] = [
-        'tools' => 'PluginCategorymanagerVisualizer',
+        'tools' => VisualizerMenu::class,
     ];
 
-    Plugin::registerClass('PluginCategorymanagerVisualizer');
+    Plugin::registerClass(VisualizerMenu::class);
 
     // Onglet « CategoryManager » sur Configuration > Profils : matrice du droit plugin_categorymanager
-    Plugin::registerClass('PluginCategorymanagerProfile', [
+    Plugin::registerClass(ProfileTab::class, [
         'addtabon' => Profile::class,
     ]);
 }
@@ -52,7 +60,7 @@ function plugin_version_categorymanager(): array
         'version'      => PLUGIN_CATEGORYMANAGER_VERSION,
         'author'       => 'CategoryManager',
         'license'      => 'GPLv3+',
-        'homepage'     => '',
+        'homepage'     => 'https://github.com/mchuche/categorymanager',
         'requirements' => [
             'glpi' => [
                 'min' => '11.0',
@@ -72,8 +80,19 @@ function plugin_categorymanager_check_prerequisites(): bool
 {
     if (version_compare(GLPI_VERSION, '11.0', '<')) {
         echo __('This plugin requires GLPI >= 11.0.', 'categorymanager');
+
         return false;
     }
+
+    if (!is_readable(__DIR__ . '/vendor/autoload.php')) {
+        echo __(
+            'Composer autoload missing — run `composer install` in the plugin directory (plugins/categorymanager).',
+            'categorymanager'
+        );
+
+        return false;
+    }
+
     return true;
 }
 

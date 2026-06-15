@@ -1,7 +1,7 @@
 /**
  * Message lisible à partir d’une erreur Axios / fetch.
  * - FastAPI : souvent `{ detail: "..." }`.
- * - Plugin GLPI CategoryManager (`ajax/native.php`) : `{ ok: false, error: "..." }`.
+ * - Plugin GLPI CategoryManager (`route /native`) : `{ ok: false, error: "..." }`.
  * @param {unknown} error
  * @returns {string}
  */

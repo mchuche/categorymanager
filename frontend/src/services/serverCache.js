@@ -12,7 +12,7 @@ export async function clearServerHttpCache() {
     // Plugin GLPI : no-op côté PHP ; dev : cache SQLite FastAPI
     const url =
       typeof window !== 'undefined' && window.__CM_PLUGIN_WEB__
-        ? `${String(window.__CM_PLUGIN_WEB__).replace(/\/?$/, '')}/ajax/cache_clear.php`
+        ? `${String(window.__CM_PLUGIN_WEB__).replace(/\/?$/, '')}/cache/clear`
         : '/api/cache/clear'
     const r = await fetch(url, { method: 'POST' })
     return r.ok

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!-- Jetons GLPI : backend FastAPI ; accès réservé intranet -->
+    <!-- Visualiseur : session GLPI (plugin) ou proxy FastAPI (dev) -->
     <DashboardPage />
   </div>
 </template>

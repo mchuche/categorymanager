@@ -1,0 +1,16 @@
+{
+    "name": "mchuche/glpi-plugin-categorymanager",
+    "description": "GLPI plugin — ITIL category visualizer (Sunburst, heatmaps)",
+    "license": "GPL-3.0-or-later",
+    "require": {
+        "php": ">=8.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "GlpiPlugin\\Categorymanager\\": "src/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

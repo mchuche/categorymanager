@@ -3,7 +3,7 @@
  *
  * Deux magasins distincts :
  * - `localStorage` : survit aux fermetures d’onglet / redémarrages (caches métier, thème).
- * - `sessionStorage` : limité à l’onglet / session courante (auth API, préférences légères par onglet).
+ * - `sessionStorage` : limité à l’onglet / session courante (préférences légères par onglet).
  *
  * Tous les modules métier passent par ces fonctions pour :
  * - éviter la duplication de try/catch et de logs ;
@@ -155,26 +155,6 @@ export function setString(key, value) {
 // ---------------------------------------------------------------------------
 // sessionStorage — données de session (onglet)
 // ---------------------------------------------------------------------------
-
-/**
- * Lit et parse du JSON sous une clé `sessionStorage`.
- * @param {string} key
- * @returns {any|null}
- */
-export function readJsonSession(key) {
-  return readJsonFrom(sessionStorage, key)
-}
-
-/**
- * Enregistre une valeur JSON sous une clé `sessionStorage`.
- * @param {string} key
- * @param {any} payload
- * @param {{ maxBytes?: number, logLabel?: string }} [opts]
- * @returns {boolean}
- */
-export function writeJsonSession(key, payload, opts = {}) {
-  return writeJsonTo(sessionStorage, key, payload, opts)
-}
 
 /**
  * Supprime une clé `sessionStorage`.

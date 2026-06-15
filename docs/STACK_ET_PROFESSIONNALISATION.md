@@ -26,7 +26,7 @@ Document de référence : technologies actuellement utilisées dans le dépôt, 
 
 | Techno | Rôle |
 |--------|------|
-| **Axios** | Requêtes HTTP : en **dev**, proxy Vite → FastAPI → `apirest.php` ; en **plugin GLPI**, `ajax/native.php` (session PHP, agrégations SQL / droits entités — pas de jetons REST navigateur). |
+| **Axios** | Requêtes HTTP : en **dev**, proxy Vite → FastAPI → `apirest.php` ; en **plugin GLPI**, route Symfony `/native` (session PHP, agrégations SQL / droits entités — pas de jetons REST navigateur). |
 | **Proxy Vite (dev)** | Contournement CORS en développement ; cible configurable dans `vite.config.js`. |
 
 ### Visualisation

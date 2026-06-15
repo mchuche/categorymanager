@@ -1,5 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+namespace GlpiPlugin\Categorymanager\Profile;
+
+use CommonGLPI;
+use GlpiPlugin\Categorymanager\Itemtype\VisualizerMenu;
+use Html;
+use Session;
+
 /**
  * -------------------------------------------------------------------------
  * Onglet « Profils » — droit d’accès au visualiseur CategoryManager
@@ -7,18 +16,14 @@
  * Enregistré via {@see Plugin::registerClass} avec `addtabon` => `Profile`.
  * L’administrateur coche quels profils peuvent ouvrir la page (lecture seule).
  * Le nom technique du droit en base est `plugin_categorymanager` (colonne
- * `glpi_profilerights.name`), aligné sur {@see PluginCategorymanagerVisualizer::$rightname}.
+ * `glpi_profilerights.name`), aligné sur {@see VisualizerMenu::$rightname}.
  * -------------------------------------------------------------------------
  */
-
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
 
 /**
  * Matrice de droits sur la fiche Profil (Configuration > Profils > [profil] > CategoryManager).
  */
-class PluginCategorymanagerProfile extends Profile
+class ProfileTab extends \Profile
 {
     /** Droit requis pour modifier les profils (pas le droit du plugin). */
     public static $rightname = 'profile';
@@ -32,7 +37,7 @@ class PluginCategorymanagerProfile extends Profile
     {
         return [
             [
-                'itemtype' => 'PluginCategorymanagerVisualizer',
+                'itemtype' => VisualizerMenu::class,
                 'label'    => __('Access to the ITIL category visualizer', 'categorymanager'),
                 'field'    => 'plugin_categorymanager',
                 'rights'   => [
@@ -47,7 +52,7 @@ class PluginCategorymanagerProfile extends Profile
      */
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
-        if ($item->getType() === Profile::class) {
+        if ($item->getType() === \Profile::class) {
             return __('CategoryManager', 'categorymanager');
         }
 
@@ -59,7 +64,7 @@ class PluginCategorymanagerProfile extends Profile
      */
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
-        if ($item->getType() === Profile::class) {
+        if ($item->getType() === \Profile::class) {
             $profile = new self();
             $profile->showFormCategorymanager((int) $item->getID());
         }
@@ -78,7 +83,7 @@ class PluginCategorymanagerProfile extends Profile
 
         // Étape 1 : seuls les comptes qui gèrent les profils peuvent modifier la matrice (pas les utilisateurs « helpdesk » sans droit profile)
         $canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]);
-        $profile = new Profile();
+        $profile = new \Profile();
 
         // Étape 2 : même formulaire POST que le reste de la fiche Profil (traitement standard GLPI sur « update »)
         if ($canedit) {

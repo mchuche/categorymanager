@@ -6,6 +6,7 @@ Visualiseur des **catégories ITIL** (Sunburst, métriques, comptages tickets) d
 
 - **GLPI** 11.x (bornes min/max : [`plugin_version_categorymanager()`](setup.php) dans `setup.php`).
 - **PHP** ≥ 8.2 (idem `requirements` dans `setup.php`).
+- **Composer** : `composer install` dans `plugins/categorymanager/` (génère `vendor/autoload.php`).
 
 ## Installation côté GLPI
 
@@ -44,7 +45,7 @@ Les fichiers sources des captures sont versionnés sous [`docs/images/`](docs/im
 
 ## Langues (français / anglais)
 
-Les libellés **PHP / Twig** passent par gettext (domaine `categorymanager`). Les chaînes du **bundle Vue** sont injectées dans `window.__CM_I18N__` depuis [`inc/i18n_js.class.php`](inc/i18n_js.class.php), selon la langue GLPI (`Session::getLanguage()`).
+Les libellés **PHP / Twig** passent par gettext (domaine `categorymanager`). Les chaînes du **bundle Vue** sont injectées dans `window.__CM_I18N__` depuis [`src/I18n/JsCatalog.php`](src/I18n/JsCatalog.php), selon la langue GLPI (`Session::getLanguage()`).
 
 - **Catalogues** : [`locales/fr_FR.po`](locales/fr_FR.po), [`locales/en_GB.po`](locales/en_GB.po) → fichiers binaires `.mo` compilés au même endroit.
 - **Regénérer les `.po` / `.mo`** après modification des msgid dans le PHP ou des traductions dans le script :
@@ -54,7 +55,7 @@ cd plugins/categorymanager   # racine du plugin
 python3 scripts/build_locales.py
 ```
 
-(`msgfmt` doit être installé.) Pour ajouter une nouvelle chaîne côté JS : ajouter une entrée dans `PluginCategorymanagerI18n::getJsMessages()`, puis compléter les dictionnaires du script [`scripts/build_locales.py`](scripts/build_locales.py) et relancer la commande ci-dessus.
+(`msgfmt` doit être installé.) Pour ajouter une nouvelle chaîne côté JS : ajouter une entrée dans `JsCatalog::getJsMessages()`, puis compléter les dictionnaires du script [`scripts/build_locales.py`](scripts/build_locales.py) et relancer la commande ci-dessus.
 
 ## Reconstruire l’interface (assets Vue)
 
@@ -74,7 +75,7 @@ Le build Vite écrit directement dans `plugins/categorymanager/public/` (voir [`
 
 | Document | Contenu |
 |----------|---------|
-| [`frontend/README.md`](frontend/README.md) | Deux modes (dev avec FastAPI vs plugin GLPI `ajax/native.php`), variables d’environnement, architecture |
+| [`frontend/README.md`](frontend/README.md) | Deux modes (dev avec FastAPI vs plugin GLPI route `/native`), variables d’environnement, architecture |
 | [`docs/STACK_ET_PROFESSIONNALISATION.md`](docs/STACK_ET_PROFESSIONNALISATION.md) | Stack technique, pistes de qualité (lint, tests, CI) |
 | [`docs/PRD  CategorieManager - Visualiseur.md`](<docs/PRD  CategorieManager - Visualiseur.md>) | Exigences fonctionnelles (PRD) |
 | [`docs/images/`](docs/images/) | Captures d’écran pour la documentation (Sunburst Structure / Tickets) |
@@ -84,16 +85,29 @@ Le build Vite écrit directement dans `plugins/categorymanager/public/` (voir [`
 
 ```
 categorymanager/
-├── setup.php, hook.php      # Point d’entrée GLPI, installation / droits
-├── inc/                     # Classes PHP (visualiseur, profil, données natives)
+├── setup.php, hook.php      # Point d'entrée GLPI, installation / droits
+├── composer.json, vendor/   # Autoload PSR-4 (GlpiPlugin\Categorymanager\)
+├── categorymanager.xml      # Métadonnées catalogue plugins GLPI 11
+├── src/                     # Architecture GLPI 11 (contrôleurs Symfony, services)
+│   ├── Controller/          # /visualizer, /native, /cache/clear
+│   ├── Service/               # NativeDataService, VisualizerPageBuilder
+│   ├── I18n/                  # JsCatalog (window.__CM_I18N__)
+│   ├── Itemtype/              # VisualizerMenu (menu Outils)
+│   └── Profile/               # ProfileTab (onglet profils)
 ├── templates/               # Twig (@categorymanager/…) — enveloppe « corporate » du visualiseur
-├── front/visualizer.php     # Page : header/footer GLPI + rendu Twig + bundle Vue si présent
-├── ajax/native.php          # JSON en session GLPI (pas de jetons REST navigateur)
 ├── public/                  # Build de production (généré par npm run build)
 ├── frontend/                # Sources Vue + serveur FastAPI de développement
 └── docs/                    # PRD, stack, références API, images README (docs/images/)
 ```
 
-## Licence
+### URLs (version 0.2.0)
+
+| Rôle | URL |
+|------|-----|
+| Page visualiseur | `/plugins/categorymanager/visualizer` |
+| API JSON | `/plugins/categorymanager/native?action=…` |
+| Vidage cache (no-op) | `POST /plugins/categorymanager/cache/clear` |
+
+## Licence## Licence
 
 GPLv3+ (voir métadonnées du plugin dans `setup.php`).

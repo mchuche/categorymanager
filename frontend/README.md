@@ -7,7 +7,7 @@ Application **Vue.js 3** pour visualiser de manière interactive les catégories
 | | **Mode A — Développement local** | **Mode B — Plugin dans GLPI (production typique)** |
 |---|----------------------------------|-----------------------------------------------------|
 | **But** | Coder l’interface sans forcément passer par une page GLPI à chaque requête | Utilisateurs finaux dans GLPI après build des assets |
-| **Données** | Backend **FastAPI** qui appelle `apirest.php` avec jetons **côté serveur Python** | Fichier PHP **`ajax/native.php`** : **session GLPI**, droits et entités comme un écran natif |
+| **Données** | Backend **FastAPI** qui appelle `apirest.php` avec jetons **côté serveur Python** | Fichier PHP **route `/plugins/categorymanager/native`** : **session GLPI**, droits et entités comme un écran natif |
 | **Jetons REST (App / User)** | Configurés dans `server/.env`, jamais dans le navigateur | **Aucun** côté client ; pas besoin d’activer la consommation REST pour les utilisateurs du visualiseur |
 | **Prérequis serveur app** | Node.js + Python + instance GLPI avec API REST pour le proxy | **Seulement** GLPI 11+ et le plugin ; **pas** de processus Python ni d’API REST obligatoire pour ce chemin |
 | **Commandes typiques** | `npm run server` + `npm run dev` | `npm run build` puis activer le plugin dans GLPI |
@@ -26,7 +26,7 @@ Quel que soit le mode, l’interface offre notamment :
 **Côté technique, le « backend » diffère :**
 
 - **Mode A** : FastAPI fait office de **proxy** vers l’API REST GLPI, avec cache HTTP persistant (SQLite) côté serveur de dev ; boutons « Actualiser » / « Rafraîchir » pour invalider ce cache.
-- **Mode B** : le navigateur parle uniquement à **`plugins/categorymanager/ajax/native.php`** ; PHP interroge la base comme GLPI (agrégations SQL, restrictions d’entités). **Pas** de FastAPI ni de SQLite sur ce chemin.
+- **Mode B** : le navigateur parle uniquement à **`/plugins/categorymanager/native`** ; PHP interroge la base comme GLPI (agrégations SQL, restrictions d’entités). **Pas** de FastAPI ni de SQLite sur ce chemin.
 
 ---
 
@@ -124,7 +124,7 @@ Ouvrir l’application fournie par Vite : pas d’écran de connexion dans le na
    (voir `vite.config.js` : `outDir` pointe vers ce dossier, `base: '/plugins/categorymanager/public/'`).
 3. Dans GLPI : activer / mettre à jour le plugin **CategoryManager**. L’entrée de menu est sous **Outils → Visualiseur catégories** (libellé selon version GLPI).
 
-**Résumé :** une fois le build déployé avec le plugin, les utilisateurs n’utilisent **pas** FastAPI ni les jetons REST dans le navigateur ; le script `front/visualizer.php` injecte `window.__CM_NATIVE_API__` et le JS appelle `ajax/native.php`.
+**Résumé :** une fois le build déployé avec le plugin, les utilisateurs n’utilisent **pas** FastAPI ni les jetons REST dans le navigateur ; le script route `/plugins/categorymanager/visualizer` injecte `window.__CM_NATIVE_API__` et le JS appelle `/plugins/categorymanager/native`.
 
 ### Déploiement « statique + FastAPI » (Mode A étendu — optionnel)
 
@@ -134,7 +134,7 @@ Si vous hébergez l’application **en dehors** de GLPI tout en gardant le proxy
 
 ## Plugin GLPI — droits et comportement
 
-**Données :** tout transite par **`ajax/native.php`** — session GLPI, **aucun** jeton App/User ni appel à `apirest.php` depuis le navigateur.
+**Données :** tout transite par **route `/plugins/categorymanager/native`** — session GLPI, **aucun** jeton App/User ni appel à `apirest.php` depuis le navigateur.
 
 **Accès par profil :** **Configuration → Profils** → [profil] → onglet **CategoryManager** → case **Lecture** (`plugin_categorymanager`). Depuis la version **0.1.2**, la lecture est **accordée par défaut** aux nouvelles entrées de droits ; vous pouvez la retirer pour masquer le menu. Après mise à jour du plugin depuis la **0.1.1**, exécutez **Mettre à jour** dans la liste des plugins pour réaligner les droits. Si la ligne de droit du plugin n’existe pas encore en session, le code peut retomber sur la lecture **ticket** (comportement historique).
 
@@ -146,7 +146,7 @@ Si vous hébergez l’application **en dehors** de GLPI tout en gardant le proxy
 |--------|--------|
 | **Front** | **Vue.js 3** (Composition API), **Pinia**, **D3.js**, **Axios** — commun aux deux modes |
 | **Mode A** | **FastAPI** + **httpx** + cache SQLite (`server/data/http_cache.sqlite3`) derrière le proxy Vite |
-| **Mode B** | **PHP GLPI** (`PluginCategorymanagerNative`, etc.) — pas de stack Python |
+| **Mode B** | **PHP GLPI** (`NativeDataService`, etc.) — pas de stack Python |
 
 ---
 
@@ -158,7 +158,7 @@ plugins/categorymanager/
   frontend/            # Projet Vue + server/ FastAPI (Mode A uniquement pour Python)
     server/app/        # FastAPI — proxy REST + cache
     src/services/      # glpiApi.js : détection native (__CM_NATIVE_API__) vs /api/glpi/…
-  ajax/native.php      # API JSON Mode B (session GLPI)
+  /plugins/categorymanager/native      # API JSON Mode B (session GLPI)
   public/              # Sortie du `npm run build` (Vite → outDir)
   front/visualizer.php # Header/footer GLPI + Twig + globales JS + bundle Vue
   docs/                # PRD, stack, références API (hors code applicatif)

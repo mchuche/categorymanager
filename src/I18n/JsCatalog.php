@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace GlpiPlugin\Categorymanager\I18n;
+
 /**
  * -------------------------------------------------------------------------
  * Chaînes UI pour le bundle JavaScript (injectées dans window.__CM_I18N__)
@@ -9,11 +13,7 @@
  * -------------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
-final class PluginCategorymanagerI18n
+final class JsCatalog
 {
     /**
      * Libellés pour le front Vue (clés stables côté JS).
